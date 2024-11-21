@@ -29,6 +29,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.team.hogspot.R
+import com.team.hogspot.composables.H1
+import com.team.hogspot.composables.H3
+import com.team.hogspot.composables.PrimaryButton
+import com.team.hogspot.composables.SecondaryButton
+import com.team.hogspot.ui.theme.AppTheme
 
 class StartingPageActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +42,7 @@ class StartingPageActivity : ComponentActivity() {
 
         setContent{
             MyLoginApplicationTheme {
-                StartingPage(OnSignUp = { toSignUpForm() }, OnLogIn = { toLogInForm() })
+                StartingPage(onSignUp = { toSignUpForm() }, onLogIn = { toLogInForm() })
             }
         }
     }
@@ -56,13 +61,13 @@ class StartingPageActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun StartingPagePreview() {
-    MyLoginApplicationTheme {
-        StartingPage(OnSignUp = {}, OnLogIn = {})
+    AppTheme {
+        StartingPage(onSignUp = {}, onLogIn = {})
     }
 }
 
 @Composable
-fun StartingPage(OnSignUp: () -> Unit, OnLogIn: () -> Unit) {
+fun StartingPage(onSignUp: () -> Unit, onLogIn: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -81,54 +86,26 @@ fun StartingPage(OnSignUp: () -> Unit, OnLogIn: () -> Unit) {
                 modifier = Modifier.size(120.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "HogSpot",
-                color = Color.White,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+            H1(
+                text = "HogSpot"
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "UARK geoguessr.",
-                color = Color.Gray,
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center
+            H3(
+                text = "UARK geogussr.",
+                color = AppTheme.colorScheme.textSecondary
             )
             Spacer(modifier = Modifier.height(200.dp))
-            Button(
-                onClick = OnSignUp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFCC323E) // Button background color
-                )
-            ) {
-                Text(
-                    text = "get started",
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            PrimaryButton(
+                onClick=onSignUp,
+                text="get started!",
+                modifier=Modifier
+            )
             Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = { OnLogIn() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF101820), // Match background color
-                    contentColor = Color.Gray // Text color for Log In
-                )
-            ) {
-                Text(
-                    text = "log in",
-                    color = Color.Gray,
-                    fontSize = 16.sp
-                )
-            }
+            SecondaryButton(
+                onClick=onLogIn,
+                text="log in",
+                modifier=Modifier
+            )
         }
     }
 }

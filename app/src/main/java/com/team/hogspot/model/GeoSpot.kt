@@ -1,3 +1,5 @@
 package com.team.hogspot.model
 
-//data class GeoSpot()
+//data class GeoSpot() {
+//
+//}

@@ -1,7 +1,7 @@
 package com.team.hogspot
 
 import android.app.Application
-import com.team.hogspot.model.user.AppRoomDatabase
+import com.team.hogspot.model.AppRoomDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 

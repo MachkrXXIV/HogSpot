@@ -14,6 +14,11 @@ interface UserDao {
     @Query("SELECT * FROM user_table WHERE id = :id")
     fun getUserById(id: Int): Flow<Map<Int, User>>
 
+//    @Query("SELECT * FROM user_table WHERE id = :id")
+//    fun getFriendsFromUser(id: Int): Flow<List<String>>
+    @Query("SELECT * FROM user_table WHERE id IN (:friendsIds)")
+    fun getFriendsFromUser(friendsIds: List<String>): Flow<List<User>>
+
     @Update
     suspend fun update(geoPhoto: User)
 

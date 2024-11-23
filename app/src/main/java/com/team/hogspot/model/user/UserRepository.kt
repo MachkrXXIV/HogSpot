@@ -15,6 +15,11 @@ class UserRepository(private val userDao: UserDao) {
     }
 
     @WorkerThread
+    suspend fun getAllFriends(friendIds: List<String>): Flow<List<User>> {
+        return userDao.getFriendsFromUser(friendIds)
+    }
+
+    @WorkerThread
     suspend fun update(user: User){
         userDao.update(user)
     }

@@ -24,6 +24,14 @@ private val darkColorScheme = AppColorScheme(
     textPrimary = white,
     textSecondary = stone500,
     textTertiary = stone600,
+    profileColors = listOf(
+        red500,
+        orange500,
+        green500,
+        blue500,
+        purple500,
+        gray500,
+    )
 )
 
 private val lightColorScheme = AppColorScheme(
@@ -34,6 +42,14 @@ private val lightColorScheme = AppColorScheme(
     textPrimary = white,
     textSecondary = stone500,
     textTertiary = stone600,
+    profileColors = listOf(
+        red500,
+        orange500,
+        green500,
+        blue500,
+        purple500,
+        gray500,
+    )
 )
 
 private val typography = AppTypography(
@@ -71,7 +87,9 @@ private val typography = AppTypography(
 
 private val shape = AppShape(
     container = RoundedCornerShape(16.dp),
-    button = RoundedCornerShape(50)
+    button = RoundedCornerShape(50),
+    profileImage = RoundedCornerShape(100)
+
 )
 
 private val size = AppSize(

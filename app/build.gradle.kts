@@ -48,6 +48,11 @@ dependencies {
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
+    // COIL
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.coil.svg)
+
     // Choose one of the following:
     // Material Design 3
     implementation(libs.androidx.material3)

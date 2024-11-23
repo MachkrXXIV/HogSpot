@@ -26,6 +26,6 @@ class UserRepository(private val userDao: UserDao) {
 
     @WorkerThread
     suspend fun delete(user: User){
-        userDao.delete(user.id)
+        userDao.delete(user.userId)
     }
 }

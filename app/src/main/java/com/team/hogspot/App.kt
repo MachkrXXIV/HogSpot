@@ -9,4 +9,5 @@ class App : Application() {
     val applicationScope = CoroutineScope(SupervisorJob())
     val database by lazy { AppRoomDatabase.getDatabase(this, applicationScope) }
     val userRepository by lazy { database.userDao() }
+    val geoSpotRepository by lazy { database.geoSpotDao() }
 }

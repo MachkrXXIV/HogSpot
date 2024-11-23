@@ -5,19 +5,23 @@ import androidx.room.Insert
 import androidx.room.MapInfo
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
+import com.team.hogspot.model.relations.UserWithSavedGeoSpots
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
-    @MapInfo(keyColumn = "id")
-    @Query("SELECT * FROM user_table WHERE id = :id")
+    @MapInfo(keyColumn = "userId")
+    @Query("SELECT * FROM user_table WHERE userId = :id")
     fun getUserById(id: Int): Flow<Map<Int, User>>
 
-//    @Query("SELECT * FROM user_table WHERE id = :id")
-//    fun getFriendsFromUser(id: Int): Flow<List<String>>
-    @Query("SELECT * FROM user_table WHERE id IN (:friendsIds)")
+    @Query("SELECT * FROM user_table WHERE userId IN (:friendsIds)")
     fun getFriendsFromUser(friendsIds: List<String>): Flow<List<User>>
+
+    @Transaction
+    @Query("SELECT * FROM user_table WHERE userId = :id")
+    fun getSavedGeoSpotsFromUser(id: Int): Flow<UserWithSavedGeoSpots>
 
     @Update
     suspend fun update(geoPhoto: User)
@@ -28,6 +32,6 @@ interface UserDao {
     @Query("DELETE FROM user_table")
     suspend fun deleteAll()
 
-    @Query("DELETE FROM user_table WHERE id = :id")
+    @Query("DELETE FROM user_table WHERE userId = :id")
     suspend fun delete(id: Int)
 }

@@ -2,7 +2,6 @@ package com.team.hogspot.composables
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,15 +14,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import coil3.ImageLoader
-import coil3.compose.AsyncImage
 import com.team.hogspot.R
 import com.team.hogspot.ui.theme.AppTheme
-import coil3.compose.rememberAsyncImagePainter
-import coil3.svg.SvgImage
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -45,7 +38,7 @@ import androidx.compose.ui.unit.sp
 fun Header (
     pageTitle: String,
     showBackButton: Boolean = false,
-    user: User,
+    username: String,
     onUserClick: () -> Unit = {},
     onBackClick: () -> Unit = {}
 ) {
@@ -53,7 +46,7 @@ fun Header (
         modifier = Modifier
             .fillMaxWidth()
             .height(64.dp)
-            .background(AppTheme.colorScheme.background)
+            //.background(AppTheme.colorScheme.background)
             .padding(horizontal = 16.dp), // Apply horizontal padding
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -81,7 +74,7 @@ fun Header (
         )
 
         ProfileImage(
-            user = user,
+            username = username,
             onClick = onUserClick,
             size = ImageSize.SMALL
         )
@@ -96,14 +89,14 @@ enum class ImageSize {
 
 @Composable
 fun ProfileImage(
-    user: User,
+    username: String,
     onClick: () -> Unit,
     size: ImageSize
 ) {
     // draw a circle with the first letter of the user's name
     // pick a random color for the circle from AppTheme.colorScheme.profileColors
     val color = AppTheme.colorScheme.profileColors.random()
-    val letter = user.name.first().uppercaseChar()
+    val letter = username.first().uppercaseChar()
     val sizeDp = when (size) {
         ImageSize.SMALL -> 28.dp
         ImageSize.LARGE -> 48.dp
@@ -131,9 +124,8 @@ fun NavItem(
     onClick: () -> Unit,
     iconId: Int,
     modifier: Modifier = Modifier,
-
+    isActive: Boolean = false
 ) {
-    var isActive = false
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
@@ -170,6 +162,7 @@ interface NavItemProps {
     val text: String
     val onClick: () -> Unit
     val iconId: Int
+    val isActive: Boolean
 }
 
 interface User {
@@ -178,30 +171,60 @@ interface User {
 
 @Composable
 fun Navbar(
-    items: List<NavItemProps>,
+    activePage: String,
     modifier: Modifier = Modifier
 ) {
-//    PreviewImage()
-    Spacer(modifier = Modifier.width(16.dp))
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(AppTheme.colorScheme.background)
-            .height(64.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+    val items = listOf(
+        object : NavItemProps {
+            override val text = "Explore"
+            override val onClick = {}
+            override val iconId = R.drawable.compass_icon
+            override val isActive = activePage == "Explore"
+
+
+        },
+        object : NavItemProps {
+            override val text = "Search"
+            override val onClick = {}
+            override val iconId = R.drawable.search_icon
+            override val isActive = activePage == "Search"
+
+        },
+        object : NavItemProps {
+            override val text = "Your Spots"
+            override val onClick = {}
+            override val iconId = R.drawable.map_icon
+            override val isActive = activePage == "Your Spots"
+        }
+    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
-        items.forEach { item ->
-            NavItem(
-                text = item.text,
-                onClick = item.onClick,
-                iconId = item.iconId
-            )
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(64.dp)
+                .align(Alignment.BottomCenter)
+                .background(AppTheme.colorScheme.background)
+                .padding(horizontal = AppTheme.size.normal),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            items.forEach { item ->
+                NavItem(
+                    text = item.text,
+                    onClick = item.onClick,
+                    iconId = item.iconId,
+                    isActive = item.isActive,
+
+                )
+            }
         }
     }
-
 }
 
-@Preview(uiMode = UI_MODE_NIGHT_NO, showBackground = true, backgroundColor = 0xFFFFFFFF)
+//@Preview(uiMode = UI_MODE_NIGHT_NO, showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 private fun PreviewNavigation() {
@@ -219,32 +242,13 @@ private fun PreviewNavigation() {
             Header(
                 pageTitle = "Explore",
                 showBackButton = true,
-                user = object : User {
-                    override val name = "Jordi Castro"
-                },
+                username = "Jordi",
                 onUserClick = {},
                 onBackClick = {}
             )
 
             Navbar(
-                items = listOf(
-                    object : NavItemProps {
-                        override val text = "Explore"
-                        override val onClick = {}
-                        override val iconId = R.drawable.compass_icon
-                    },
-                    object : NavItemProps {
-                        override val text = "Search"
-                        override val onClick = {}
-                        override val iconId = R.drawable.search_icon
-
-                    },
-                    object : NavItemProps {
-                        override val text = "Your Spots"
-                        override val onClick = {}
-                        override val iconId = R.drawable.map_icon
-                    }
-                )
+                activePage = "Explore",
             )
 
         }

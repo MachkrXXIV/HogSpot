@@ -5,12 +5,12 @@ import kotlinx.coroutines.flow.Flow
 
 class UserRepository(private val userDao: UserDao) {
     @WorkerThread
-    suspend fun insert(user: User) {
-        userDao.insert(user)
+    suspend fun insert(user: User): Long {
+        return userDao.insert(user)
     }
 
     @WorkerThread
-    suspend fun getUserById(id: Int): Flow<Map<Int,User>> {
+    suspend fun getUserById(id: Long): Flow<Map<Long,User>> {
         return userDao.getUserById(id)
     }
 
@@ -26,6 +26,6 @@ class UserRepository(private val userDao: UserDao) {
 
     @WorkerThread
     suspend fun delete(user: User){
-        userDao.delete(user.userId)
+        userDao.delete(user.userId!!)
     }
 }

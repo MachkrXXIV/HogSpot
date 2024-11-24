@@ -19,7 +19,10 @@ data class AppColorScheme(
     val textPrimary: Color,
     val textSecondary: Color,
     val textTertiary: Color,
-    val profileColors: List<Color> = emptyList()
+    val profileColors: List<Color> = emptyList(),
+    val difficultyEasy: Color = Color.Unspecified,
+    val difficultyMedium: Color = Color.Unspecified,
+    val difficultyHard: Color = Color.Unspecified,
     // add more to interface if needed
 )
 
@@ -40,6 +43,9 @@ data class AppShape(
     val container: Shape,
     val button: Shape,
     val profileImage: Shape,
+    val containerRoundedTop: Shape,
+    val containerRoundedBottom: Shape,
+    val tag: Shape,
 )
 
 
@@ -61,7 +67,10 @@ val  LocalAppColorScheme = staticCompositionLocalOf {
         textPrimary = Color.Unspecified,
         textSecondary = Color.Unspecified,
         textTertiary = Color.Unspecified,
-        profileColors = emptyList()
+        profileColors = emptyList(),
+        difficultyEasy = Color.Unspecified,
+        difficultyMedium = Color.Unspecified,
+        difficultyHard = Color.Unspecified,
     )
 }
 
@@ -81,6 +90,9 @@ val LocalAppShape = staticCompositionLocalOf {
         container = RectangleShape,
         button = RectangleShape,
         profileImage = RectangleShape,
+        containerRoundedTop = RectangleShape,
+        containerRoundedBottom = RectangleShape,
+        tag = RectangleShape,
     )
 }
 

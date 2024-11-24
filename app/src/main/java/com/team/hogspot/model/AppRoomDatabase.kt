@@ -38,7 +38,7 @@ public abstract class AppRoomDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppRoomDatabase::class.java,
-                    "user_database"
+                    "hogspot_database"
                 ).addCallback(UserDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
@@ -69,6 +69,7 @@ public abstract class AppRoomDatabase : RoomDatabase() {
             val user1 = User(1, "XXXking_bobXXX", "papayabanana@example.com", emptyList())
             val user2 = User(2, "stuartNotLittle", "stuieParaTue@example.com", emptyList())
             userDao.insert(user1)
+            userDao.insert(user2)
         }
     }
 }

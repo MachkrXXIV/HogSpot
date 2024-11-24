@@ -19,6 +19,7 @@ data class AppColorScheme(
     val textPrimary: Color,
     val textSecondary: Color,
     val textTertiary: Color,
+    val profileColors: List<Color> = emptyList()
     // add more to interface if needed
 )
 
@@ -37,7 +38,8 @@ data class AppTypography (
 // shape
 data class AppShape(
     val container: Shape,
-    val button: Shape
+    val button: Shape,
+    val profileImage: Shape,
 )
 
 
@@ -59,6 +61,7 @@ val  LocalAppColorScheme = staticCompositionLocalOf {
         textPrimary = Color.Unspecified,
         textSecondary = Color.Unspecified,
         textTertiary = Color.Unspecified,
+        profileColors = emptyList()
     )
 }
 
@@ -77,6 +80,7 @@ val LocalAppShape = staticCompositionLocalOf {
     AppShape(
         container = RectangleShape,
         button = RectangleShape,
+        profileImage = RectangleShape,
     )
 }
 

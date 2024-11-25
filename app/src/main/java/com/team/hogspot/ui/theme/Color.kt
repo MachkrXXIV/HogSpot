@@ -15,3 +15,12 @@ val stone600 = Color(0xFF323C46) // textTertiary
 
 // LIGHT MODE COLORS:
 // TODO: add light mode colors
+
+
+// profile colors
+val red500 = Color(0xFFEF4444)
+val orange500 = Color(0xFFF59E0B)
+val green500 = Color(0xFF22C55E)
+val blue500 = Color(0xFF3B82F6)
+val purple500 = Color(0xFF6366F1)
+val gray500 = Color(0xFF78716C)

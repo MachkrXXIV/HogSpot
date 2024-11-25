@@ -5,9 +5,8 @@ import androidx.room.Insert
 import androidx.room.MapInfo
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
-import com.team.hogspot.model.relations.UserWithSavedGeoSpots
+import com.team.hogspot.model.geospot.GeoSpot
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -19,9 +18,8 @@ interface UserDao {
     @Query("SELECT * FROM user_table WHERE userId IN (:friendsIds)")
     fun getFriendsFromUser(friendsIds: List<String>): Flow<List<User>>
 
-    @Transaction
-    @Query("SELECT * FROM user_table WHERE userId = :id")
-    fun getSavedGeoSpotsFromUser(id: Long): Flow<UserWithSavedGeoSpots>
+    @Query("SELECT * FROM geo_spot_table WHERE creatorId = :id")
+    fun getSavedGeoSpotsFromUser(id: Long): Flow<GeoSpot>
 
     @Update
     suspend fun update(geoPhoto: User)

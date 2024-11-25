@@ -18,8 +18,8 @@ import java.time.LocalDateTime
     )]
 )
 data class GeoSpot(
-    @PrimaryKey(autoGenerate = true) val geoSpotId: Int?,
-    @ColumnInfo(name = "creatorId") val creatorId: Int,
+    @PrimaryKey(autoGenerate = true) val geoSpotId: Long?,
+    @ColumnInfo(name = "creatorId") val creatorId: Long,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "imgFilePath") val imgFilePath: String,
     @ColumnInfo(name = "description") var description: String,

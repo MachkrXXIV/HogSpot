@@ -2,6 +2,7 @@ package com.team.hogspot.model.user
 
 import androidx.annotation.WorkerThread
 import com.team.hogspot.model.geospot.GeoSpot
+import com.team.hogspot.model.relations.UserWithSavedGeoSpots
 import kotlinx.coroutines.flow.Flow
 
 class UserRepository(private val userDao: UserDao) {
@@ -21,7 +22,7 @@ class UserRepository(private val userDao: UserDao) {
     }
 
     @WorkerThread
-    suspend fun getSavedGeoSpotsFromUser(id: Long): Flow<GeoSpot> {
+    suspend fun getSavedGeoSpotsFromUser(id: Long): Flow<UserWithSavedGeoSpots> {
         return userDao.getSavedGeoSpotsFromUser(id)
     }
 

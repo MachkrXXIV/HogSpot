@@ -25,5 +25,5 @@ interface GeoSpotDao {
     suspend fun deleteAll()
 
     @Query("DELETE FROM geo_spot_table WHERE geoSpotId = :id")
-    suspend fun delete(id: Int)
+    suspend fun delete(id: Long)
 }

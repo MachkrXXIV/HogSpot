@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.team.hogspot.model.geospot.GeoSpot
 import com.team.hogspot.model.user.User
 import com.team.hogspot.model.user.UserRepository
 import kotlinx.coroutines.launch
@@ -16,12 +17,21 @@ import kotlinx.coroutines.launch
  */
 class UserViewModel(private val repository: UserRepository) : ViewModel() {
     private val _currentUser = MutableLiveData<User>().apply { value = null }
+    private val _savedGeoSpots = MutableLiveData<List<GeoSpot>>().apply { value = emptyList() }
     val currentUser: LiveData<User>
         get() = _currentUser
+    val savedGeoSpots: LiveData<List<GeoSpot>>
+        get() = _savedGeoSpots
 
     private fun setCurrentUser(user: User) {
         _currentUser.value = user
         Log.d("UserViewModel", "Current User: ${currentUser.value}")
+    }
+
+    fun getSavedGeoSpotsFromUser(id: Long) = viewModelScope.launch {
+        repository.getSavedGeoSpotsFromUser(id).collect {
+            _savedGeoSpots.value = it.savedGeoSpots
+        }
     }
 
     fun signUp(email: String, userName: String) = viewModelScope.launch {

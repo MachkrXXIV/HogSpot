@@ -6,14 +6,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +33,6 @@ import com.team.hogspot.composables.Hogspot
 import com.team.hogspot.composables.Input
 import com.team.hogspot.composables.Navbar
 import com.team.hogspot.composables.SearchItem
-import com.team.hogspot.composables.User
 import com.team.hogspot.ui.theme.AppTheme
 
 class SearchActivity : ComponentActivity() {
@@ -39,7 +42,7 @@ class SearchActivity : ComponentActivity() {
 
         setContent {
             AppTheme {
-                // Search()
+                SearchPage(onSearch = {})
             }
         }
     }
@@ -102,10 +105,10 @@ fun SearchPage(
             .background(AppTheme.colorScheme.background) // Dark background color
             .padding(AppTheme.size.medium)
     ) {
-        Column (
+        Column(
             modifier = Modifier.fillMaxSize(),
 
-        ){
+            ) {
             Header(
                 pageTitle = "Search",
                 username = "Jordi",
@@ -118,11 +121,20 @@ fun SearchPage(
             )
             Spacer(modifier = Modifier.height(32.dp))
             // map search results
-            searchResults.forEach { hogspot ->
-                SearchItem(
-                    hogspot = hogspot,
-                    onClick = {} // TODO: launch hogspot detailed activity with hogspot.id
-                )
+            Column (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(575.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                repeat(10){
+                    searchResults.forEach { hogspot ->
+                        SearchItem(
+                            hogspot = hogspot,
+                            onClick = {} // TODO: launch hogspot detailed activity with hogspot.id
+                        )
+                    }
+                }
             }
 
             Navbar(

@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 fun Header (
     pageTitle: String,
     showBackButton: Boolean = false,
+    showUserProfile: Boolean = true,
     username: String,
     onUserClick: () -> Unit = {},
     onBackClick: () -> Unit = {}
@@ -73,18 +74,25 @@ fun Header (
             color = AppTheme.colorScheme.textPrimary,
         )
 
-        ProfileImage(
-            username = username,
-            onClick = onUserClick,
-            size = ImageSize.SMALL
-        )
+        if (showUserProfile) {
+            ProfileImage(
+                username = username,
+                onClick = onUserClick,
+                size = ImageSize.SM
+            )
+        } else {
+            // Add a spacer to keep the title centered
+            Spacer(modifier = Modifier.size(24.dp))
+        }
 
     }
 }
 
 enum class ImageSize {
-    SMALL,
-    LARGE
+    SM,
+    MD,
+    LG,
+    XL,
 }
 
 @Composable
@@ -98,8 +106,16 @@ fun ProfileImage(
     val color = AppTheme.colorScheme.profileColors.random()
     val letter = username.first().uppercaseChar()
     val sizeDp = when (size) {
-        ImageSize.SMALL -> 28.dp
-        ImageSize.LARGE -> 48.dp
+        ImageSize.SM -> 28.dp
+        ImageSize.MD -> 48.dp
+        ImageSize.LG -> 64.dp
+        ImageSize.XL -> 96.dp
+    }
+    val fontSizeDp = when (size) {
+        ImageSize.SM -> 14.sp
+        ImageSize.MD -> 32.sp
+        ImageSize.LG -> 48.sp
+        ImageSize.XL -> 64.sp
     }
 
     Box(
@@ -112,7 +128,8 @@ fun ProfileImage(
         Text(
             text = letter.toString(),
             color = AppTheme.colorScheme.background,
-            style = AppTheme.typography.h3
+            fontFamily = AppTheme.typography.labelNormal.fontFamily,
+            fontSize = fontSizeDp
         )
     }
 
@@ -143,7 +160,7 @@ fun NavItem(
 
             Icon(
                 painter = painterResource(id = iconId),
-                contentDescription = "HogSpot Logo",
+                contentDescription = "Icon",
                 modifier = Modifier
                     .width(20.dp)
                     .height(20.dp),

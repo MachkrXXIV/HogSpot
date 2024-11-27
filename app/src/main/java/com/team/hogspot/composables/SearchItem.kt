@@ -2,8 +2,10 @@ package com.team.hogspot.composables
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.text.Selection
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +19,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,10 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.team.hogspot.R
 import com.team.hogspot.ui.theme.AppTheme
-
-
-
-
+import com.team.hogspot.ui.theme.blue500
 
 
 data class Hogspot(
@@ -119,18 +122,31 @@ fun SearchItem(
 }
 
 @Composable
-fun DifficultyTag(difficulty: Difficulty) {
+fun DifficultyTag(
+    difficulty: Difficulty,
+    onClick: (String) -> Unit = {},
+    isCurrSelection: Boolean = false
+) {
+    // if isCurrSelection: add a blue border-2dp around the tag
     val backgroundDifficulty = when (difficulty) {
         Difficulty.EASY -> AppTheme.colorScheme.difficultyEasy
         Difficulty.MEDIUM -> AppTheme.colorScheme.difficultyMedium
         Difficulty.HARD -> AppTheme.colorScheme.difficultyHard
     }
-    Box(
+    val borderModifier = if (isCurrSelection) {
+        Modifier.border(2.dp, blue500, AppTheme.shape.tag)
+    } else {
+        Modifier
+    }
+        Box(
         modifier = Modifier
             .width(54.dp)
             .height(32.dp)
             .clip(AppTheme.shape.tag)
-            .background(backgroundDifficulty),
+            .background(backgroundDifficulty)
+            .then(borderModifier)
+            .clickable(onClick = { onClick(difficulty.name) }),
+
         contentAlignment = Alignment.Center,
     ) {
         LabelSmall(
@@ -154,6 +170,45 @@ fun StarRating(rating: Float) {
                 modifier = Modifier.size(16.dp)
             )
         }
+    }
+}
+
+@Composable
+fun SelectDifficulty (
+    onSelection : (Difficulty) -> Unit
+) {
+    var selectedDifficulty by remember { mutableStateOf<Difficulty>(Difficulty.EASY) }
+
+    Row (
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        DifficultyTag(
+            difficulty = Difficulty.EASY,
+            onClick = {
+                onSelection(Difficulty.EASY)
+                selectedDifficulty = Difficulty.EASY
+            },
+            isCurrSelection = selectedDifficulty == Difficulty.EASY
+        )
+        DifficultyTag(
+            difficulty = Difficulty.MEDIUM,
+            onClick = {
+                onSelection(Difficulty.MEDIUM)
+                selectedDifficulty = Difficulty.MEDIUM
+            },
+            isCurrSelection = selectedDifficulty == Difficulty.MEDIUM
+        )
+        DifficultyTag(
+            difficulty = Difficulty.HARD,
+            onClick = {
+                onSelection(Difficulty.HARD)
+                selectedDifficulty = Difficulty.HARD
+            },
+            isCurrSelection = selectedDifficulty == Difficulty.HARD
+        )
     }
 }
 
@@ -215,6 +270,10 @@ private fun PreviewPrimaryButton() {
             SearchItem(
                 hogspot = hogspot3,
                 onClick = {}
+            )
+
+            SelectDifficulty(
+                onSelection = { difficulty -> }
             )
         }
     }

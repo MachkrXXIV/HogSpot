@@ -34,6 +34,7 @@ enum class InputSize {
     SM,
     MD,
     LG,
+    XL
 }
 
 @Composable
@@ -43,24 +44,34 @@ fun Input (
     iconId: Int = -1,
     size: InputSize = InputSize.SM,
     shape: Shape = AppTheme.shape.container,
-    noTopBorder: Boolean = false
+    noTopBorder: Boolean = false,
+    modifier: Modifier = Modifier
 ) {
     val height = when (size) {
-        InputSize.XS -> 32.dp
+        InputSize.XS -> 56.dp
         InputSize.SM -> 64.dp
         InputSize.MD -> 96.dp
         InputSize.LG -> 128.dp
+        InputSize.XL -> 160.dp
+    }
+    val padding = when (size) {
+        InputSize.XS -> 12.dp
+        InputSize.SM -> 16.dp
+        InputSize.MD -> 16.dp
+        InputSize.LG -> 16.dp
+        InputSize.XL -> 16.dp
     }
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(height)
             .border(2.dp, AppTheme.colorScheme.textTertiary, shape)
 
             .clip(shape)
             .background(AppTheme.colorScheme.backgroundSecondary)
-            .padding(16.dp),
-        contentAlignment = Alignment.CenterStart
+            .padding(padding),
+        contentAlignment = Alignment.TopStart
+
     ) {
 
         Row (
@@ -114,6 +125,51 @@ private fun PreviewPrimaryButton() {
                 placeholder = "Password",
                 shape = AppTheme.shape.containerRoundedBottom,
                 noTopBorder = true
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Input(
+                placeholder = "Title...",
+                type = "Title",
+                shape = AppTheme.shape.container,
+                iconId = -1,
+                size = InputSize.XS
+
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Input(
+                placeholder = "Title...",
+                type = "Title",
+                shape = AppTheme.shape.container,
+                iconId = -1,
+                size = InputSize.SM
+
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Input(
+                placeholder = "Title...",
+                type = "Title",
+                shape = AppTheme.shape.container,
+                iconId = -1,
+                size = InputSize.MD
+
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Input(
+                placeholder = "Title...",
+                type = "Title",
+                shape = AppTheme.shape.container,
+                iconId = -1,
+                size = InputSize.LG
+
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Input(
+                placeholder = "Title...",
+                type = "Title",
+                shape = AppTheme.shape.container,
+                iconId = -1,
+                size = InputSize.XL
+
             )
         }
     }

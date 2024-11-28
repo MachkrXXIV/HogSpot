@@ -67,7 +67,7 @@ private val typography = AppTypography(
     h2 = TextStyle(
         fontFamily = MonomaniacOne,
         fontWeight = FontWeight.Bold,
-        fontSize = 24.sp,
+        fontSize = 26.sp,
     ),
     h3 = TextStyle(
         fontFamily = MonomaniacOne,

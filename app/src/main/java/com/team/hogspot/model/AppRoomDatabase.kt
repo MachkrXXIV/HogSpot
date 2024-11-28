@@ -33,7 +33,7 @@ public abstract class AppRoomDatabase : RoomDatabase() {
         fun getDatabase(context: Context, scope: CoroutineScope): AppRoomDatabase {
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
-            Log.d("UserRoomDatabase", "Getting UserRoomDatabase")
+            Log.d("AppRoomDatabase", "Getting AppRoomDatabase")
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,

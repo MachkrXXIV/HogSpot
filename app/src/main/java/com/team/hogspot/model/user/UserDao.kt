@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import com.team.hogspot.model.geospot.GeoSpot
 import com.team.hogspot.model.relations.UserWithSavedGeoSpots
 import kotlinx.coroutines.flow.Flow
 
@@ -14,24 +15,24 @@ import kotlinx.coroutines.flow.Flow
 interface UserDao {
     @MapInfo(keyColumn = "userId")
     @Query("SELECT * FROM user_table WHERE userId = :id")
-    fun getUserById(id: Int): Flow<Map<Int, User>>
+    fun getUserById(id: Long): Flow<Map<Long, User>>
 
     @Query("SELECT * FROM user_table WHERE userId IN (:friendsIds)")
     fun getFriendsFromUser(friendsIds: List<String>): Flow<List<User>>
 
     @Transaction
     @Query("SELECT * FROM user_table WHERE userId = :id")
-    fun getSavedGeoSpotsFromUser(id: Int): Flow<UserWithSavedGeoSpots>
+    fun getSavedGeoSpotsFromUser(id: Long): Flow<UserWithSavedGeoSpots>
 
     @Update
     suspend fun update(geoPhoto: User)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(geoPhoto: User)
+    suspend fun insert(geoPhoto: User): Long
 
     @Query("DELETE FROM user_table")
     suspend fun deleteAll()
 
     @Query("DELETE FROM user_table WHERE userId = :id")
-    suspend fun delete(id: Int)
+    suspend fun delete(id: Long)
 }

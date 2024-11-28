@@ -1,16 +1,18 @@
 package com.team.hogspot.model.user
 
 import androidx.annotation.WorkerThread
+import com.team.hogspot.model.geospot.GeoSpot
+import com.team.hogspot.model.relations.UserWithSavedGeoSpots
 import kotlinx.coroutines.flow.Flow
 
 class UserRepository(private val userDao: UserDao) {
     @WorkerThread
-    suspend fun insert(user: User) {
-        userDao.insert(user)
+    suspend fun insert(user: User): Long {
+        return userDao.insert(user)
     }
 
     @WorkerThread
-    suspend fun getUserById(id: Int): Flow<Map<Int,User>> {
+    suspend fun getUserById(id: Long): Flow<Map<Long,User>> {
         return userDao.getUserById(id)
     }
 
@@ -20,12 +22,17 @@ class UserRepository(private val userDao: UserDao) {
     }
 
     @WorkerThread
+    suspend fun getSavedGeoSpotsFromUser(id: Long): Flow<UserWithSavedGeoSpots> {
+        return userDao.getSavedGeoSpotsFromUser(id)
+    }
+
+    @WorkerThread
     suspend fun update(user: User){
         userDao.update(user)
     }
 
     @WorkerThread
     suspend fun delete(user: User){
-        userDao.delete(user.userId)
+        userDao.delete(user.userId!!)
     }
 }

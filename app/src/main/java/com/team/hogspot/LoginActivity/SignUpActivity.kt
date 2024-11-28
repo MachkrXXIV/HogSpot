@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
@@ -23,21 +24,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.team.hogspot.App
+import com.team.hogspot.UserViewModel
+import com.team.hogspot.UserViewModelFactory
 
 class SignUpActivity : ComponentActivity() {
+    private val userViewModel: UserViewModel by viewModels {
+        UserViewModelFactory((application as App).userRepository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         setContent{
             MyLoginApplicationTheme {
-                SignUpForm(onBackClick = { backPressed() })
+                SignUpForm(onBackClick = { backPressed() }, onSignUp = { email, userName -> signUp(email, userName) })
             }
         }
     }
 
     private fun backPressed() {
         onBackPressedDispatcher.onBackPressed()
+    }
+
+    private fun signUp(email: String, userName: String) {
+        userViewModel.signUp(email, userName)
     }
 }
 
@@ -51,7 +63,8 @@ fun SignUpFormPreview() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpForm(onBackClick: () -> Unit = {}) {
+fun SignUpForm(onBackClick: () -> Unit = {}, onSignUp: (String, String) -> Unit = {email, userName ->}) {
+    var email by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -72,6 +85,22 @@ fun SignUpForm(onBackClick: () -> Unit = {}) {
         )
         Text(text = "Sign Up", style = MaterialTheme.typography.headlineMedium, color = Color.White)
         Spacer(modifier = Modifier.height(16.dp))
+        TextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth(),
+            colors =
+            textFieldColors(
+                unfocusedContainerColor= Color(0xFF101820),
+                focusedContainerColor = Color(0xFF1C2A3A),
+                focusedTextColor = Color.White,
+                focusedLabelColor = Color.White,
+                cursorColor = Color.White,
+                focusedIndicatorColor = Color.White
+            )
+        )
+        Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = username,
             onValueChange = { username = it },
@@ -123,7 +152,7 @@ fun SignUpForm(onBackClick: () -> Unit = {}) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { /* Handle sign up */ },
+            onClick = { onSignUp(email, username) },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF325E25)),
             modifier = Modifier.fillMaxWidth()
         ) {

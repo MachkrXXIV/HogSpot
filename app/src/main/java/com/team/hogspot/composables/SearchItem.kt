@@ -1,8 +1,6 @@
 package com.team.hogspot.composables
 
-import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.text.Selection
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -125,13 +123,22 @@ fun SearchItem(
 fun DifficultyTag(
     difficulty: Difficulty,
     onClick: (String) -> Unit = {},
-    isCurrSelection: Boolean = false
+    isCurrSelection: Boolean = false,
+    size: DifficultyAndRatingSize = DifficultyAndRatingSize.SM
 ) {
     // if isCurrSelection: add a blue border-2dp around the tag
     val backgroundDifficulty = when (difficulty) {
         Difficulty.EASY -> AppTheme.colorScheme.difficultyEasy
         Difficulty.MEDIUM -> AppTheme.colorScheme.difficultyMedium
         Difficulty.HARD -> AppTheme.colorScheme.difficultyHard
+    }
+    val buttonWidth = when (size) {
+        DifficultyAndRatingSize.XS -> 48.dp
+        DifficultyAndRatingSize.SM -> 54.dp
+    }
+    val buttonHeight = when (size) {
+        DifficultyAndRatingSize.XS -> 28.dp
+        DifficultyAndRatingSize.SM -> 32.dp
     }
     val borderModifier = if (isCurrSelection) {
         Modifier.border(2.dp, blue500, AppTheme.shape.tag)
@@ -140,8 +147,8 @@ fun DifficultyTag(
     }
         Box(
         modifier = Modifier
-            .width(54.dp)
-            .height(32.dp)
+            .width(buttonWidth)
+            .height(buttonHeight)
             .clip(AppTheme.shape.tag)
             .background(backgroundDifficulty)
             .then(borderModifier)
@@ -156,7 +163,11 @@ fun DifficultyTag(
 }
 
 @Composable
-fun StarRating(rating: Float) {
+fun StarRating(rating: Float, size: DifficultyAndRatingSize = DifficultyAndRatingSize.SM) {
+    val starSize = when (size) {
+        DifficultyAndRatingSize.XS -> 14.dp
+        DifficultyAndRatingSize.SM -> 16.dp
+    }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -167,7 +178,7 @@ fun StarRating(rating: Float) {
             Image(
                 painter = painterResource(id = R.drawable.star_icon),
                 contentDescription = "Full Star",
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(starSize)
             )
         }
     }
@@ -274,6 +285,18 @@ private fun PreviewPrimaryButton() {
 
             SelectDifficulty(
                 onSelection = { difficulty -> }
+            )
+
+            DifficultyAndRating(
+                difficulty = Difficulty.MEDIUM,
+                rating = 3.0f,
+                size = DifficultyAndRatingSize.SM
+            )
+
+            DifficultyAndRating(
+                difficulty = Difficulty.MEDIUM,
+                rating = 3.0f,
+                size = DifficultyAndRatingSize.XS
             )
         }
     }

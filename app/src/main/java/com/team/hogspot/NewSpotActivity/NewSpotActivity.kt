@@ -2,43 +2,31 @@ package com.team.hogspot.NewSpotActivity
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Space
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import com.team.hogspot.R
-import com.team.hogspot.composables.Difficulty
-import com.team.hogspot.composables.H1
 import com.team.hogspot.composables.H2
-import com.team.hogspot.composables.H3
 import com.team.hogspot.composables.Header
-import com.team.hogspot.composables.Hogspot
 import com.team.hogspot.composables.Input
 import com.team.hogspot.composables.InputSize
 import com.team.hogspot.composables.Navbar
 import com.team.hogspot.composables.P
 import com.team.hogspot.composables.PrimaryButton
-import com.team.hogspot.composables.SearchItem
 import com.team.hogspot.composables.SecondaryButton
 import com.team.hogspot.composables.SelectDifficulty
 import com.team.hogspot.ui.theme.AppTheme
@@ -99,7 +87,7 @@ fun NewSpotPage(
                 showUserProfile = false,
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Column (
                 modifier = Modifier
@@ -107,6 +95,8 @@ fun NewSpotPage(
                     .height(670.dp)
                     .verticalScroll(rememberScrollState())
             ) {
+                Spacer(modifier = Modifier.height(12.dp)) // split into 12 and 12 so the scroll is higher up and smoother
+
                 H2(
                     text = "Title"
                 )

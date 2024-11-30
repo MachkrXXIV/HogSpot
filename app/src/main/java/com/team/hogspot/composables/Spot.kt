@@ -15,26 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.team.hogspot.model.geospot.Difficulty
+import com.team.hogspot.model.geospot.GeoSpot
 import com.team.hogspot.ui.theme.AppTheme
-
-
-data class SpotTemp(
-    val id: Int,
-    val name: String,
-    val description: String,
-    val difficulty: String,
-    val tags: List<String>,
-    val rating: Double,
-    val numRatings: Int,
-    val numCheckins: Int,
-    val numPhotos: Int,
-    val numComments: Int,
-    val photos: List<String>,
-)
+import java.time.LocalDateTime
 
 @Composable
 fun SpotCard(
-    spot: SpotTemp,
+    spot: GeoSpot,
     onSpotClick: () -> Unit = {},
 ) {
     Column(
@@ -49,8 +37,8 @@ fun SpotCard(
 
 @Composable
 fun SpotCarousel(
-    spots: List<SpotTemp>,
-    onSpotClick: (SpotTemp) -> Unit = {},
+    spots: List<GeoSpot>,
+    onSpotClick: (GeoSpot) -> Unit = {},
 ) {
     Box(
         modifier = Modifier
@@ -95,45 +83,31 @@ private fun SpotPreview() {
             ) {
                 SpotCarousel(
                     spots = listOf(
-                        SpotTemp(
-                            id = 1,
-                            name = "Spot1",
-                            description = "Description1",
-                            difficulty = "Easy",
-                            tags = listOf("Tag1", "Tag2"),
-                            rating = 3.0,
-                            numRatings = 10,
-                            numCheckins = 5,
-                            numPhotos = 3,
-                            numComments = 2,
-                            photos = listOf("Photo1", "Photo2")
+                        GeoSpot(
+                            geoSpotId = 1,
+                            name = "HogSpot 1",
+                            description = "This is a description of HogSpot 1",
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            creatorId = 1,
+                            creationDate = LocalDateTime.now(),
+                            imgFilePath = "img1.jpg",
+                            difficulty = Difficulty.EASY,
+                            hint = "This is a hint for HogSpot 1",
+
                         ),
-                        SpotTemp(
-                            id = 2,
-                            name = "Spot2",
-                            description = "Description2",
-                            difficulty = "Medium",
-                            tags = listOf("Tag1", "Tag2"),
-                            rating = 4.0,
-                            numRatings = 10,
-                            numCheckins = 5,
-                            numPhotos = 3,
-                            numComments = 2,
-                            photos = listOf("Photo1", "Photo2")
+                        GeoSpot(
+                            geoSpotId = 2,
+                            name = "HogSpot 2",
+                            description = "This is a description of HogSpot 2",
+                            latitude = 0.0,
+                            longitude = 0.0,
+                            creatorId = 2,
+                            creationDate = LocalDateTime.now(),
+                            imgFilePath = "img2.jpg",
+                            difficulty = Difficulty.MEDIUM,
+                            hint = "This is a hint for HogSpot 2",
                         ),
-                        SpotTemp(
-                            id = 3,
-                            name = "Spot3",
-                            description = "Description3",
-                            difficulty = "Hard",
-                            tags = listOf("Tag1", "Tag2"),
-                            rating = 5.0,
-                            numRatings = 10,
-                            numCheckins = 5,
-                            numPhotos = 3,
-                            numComments = 2,
-                            photos = listOf("Photo1", "Photo2")
-                        )
                     )
                 )
         }

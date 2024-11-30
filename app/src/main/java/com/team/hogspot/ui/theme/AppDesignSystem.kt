@@ -46,7 +46,8 @@ data class AppShape(
     val containerRoundedTop: Shape,
     val containerRoundedBottom: Shape,
     val tag: Shape,
-)
+) {
+}
 
 
 // sizes

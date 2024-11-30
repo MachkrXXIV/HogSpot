@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,7 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.team.hogspot.App
 import com.team.hogspot.R
+import com.team.hogspot.UserViewModel
+import com.team.hogspot.UserViewModelFactory
 import com.team.hogspot.composables.H2
 import com.team.hogspot.composables.Header
 import com.team.hogspot.composables.Navbar
@@ -27,17 +31,21 @@ import com.team.hogspot.composables.SecondaryButton
 import com.team.hogspot.composables.SpotCarousel
 import com.team.hogspot.composables.UserHeader
 import com.team.hogspot.composables.UserInfoCards
-import com.team.hogspot.composables.UserTemp
+import com.team.hogspot.model.user.UserRepository
 import com.team.hogspot.ui.theme.AppTheme
+import java.time.format.DateTimeFormatter
 
 class UserActivity : ComponentActivity() {
+    private val userViewModel: UserViewModel by viewModels {
+        UserViewModelFactory((application as App).userRepository)
+    }
     override fun onCreate(savedInstancesBundle: Bundle?) {
         super.onCreate(savedInstancesBundle)
         enableEdgeToEdge()
 
         setContent {
             AppTheme {
-                //
+                UserPage(userViewModel)
             }
         }
     }
@@ -49,55 +57,16 @@ class UserActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun UserPreview() {
+    lateinit var mockViewModel: UserViewModel
     AppTheme {
-        UserPage()
+        UserPage(mockViewModel)
     }
 }
 
 
 @Composable
-fun UserPage() {
-
-    val user = UserTemp(
-        id = 1,
-        username = "Jordi Castro",
-        email = "jordi@gmail.com",
-        dateJoined = "10/12/24",
-        streak = 5,
-        numSpots = 3,
-        friends = listOf(
-            UserTemp(
-                id = 1,
-                username = "Bob",
-                email = "bob@gmail.com",
-                dateJoined = "10/12/24",
-                streak = 4,
-                numSpots = 2,
-                spots = listOf(),
-                friends = listOf()
-                ),
-            UserTemp(
-                id = 2,
-                username = "Kevin",
-                email = "kevin@gmail.com",
-                dateJoined = "10/12/24",
-                streak = 0,
-                numSpots = 1,
-                spots = listOf(),
-                friends = listOf()
-            ),
-            UserTemp(
-                id = 1,
-                username = "Stuart",
-                email = "stuart@gmail.com",
-                dateJoined = "10/12/2024",
-                streak = 17,
-                numSpots = 14,
-                spots = listOf(),
-                friends = listOf()
-            ),
-        )
-    )
+fun UserPage(viewModel: UserViewModel) {
+    val user = viewModel.currentUser.value
 
     Box(
         modifier = Modifier
@@ -111,7 +80,7 @@ fun UserPage() {
             ) {
             Header(
                 pageTitle = "User",
-                username = "Jordi",
+                username = user!!.userName,
                 showUserProfile = false,
             )
 
@@ -123,8 +92,8 @@ fun UserPage() {
                     .verticalScroll(rememberScrollState())
             ) {
                 UserHeader(
-                    username = user.username,
-                    dateJoined = user.dateJoined
+                    username = user!!.userName,
+                    dateJoined = user?.dateJoined?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")).toString()
                 )
 
                 Spacer(modifier = Modifier.height(36.dp))
@@ -141,7 +110,7 @@ fun UserPage() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 SpotCarousel(
-                    spots = user.spots
+                    spots = viewModel.savedGeoSpots.value!!
                 )
 
                 Spacer(modifier = Modifier.height(36.dp))

@@ -27,19 +27,6 @@ import com.team.hogspot.model.user.User
 import com.team.hogspot.ui.theme.AppTheme
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-
-
-//data class UserTemp(
-//    val id: Int,
-//    val username: String,
-//    val email: String,
-//    val dateJoined: String,
-//    val streak: Int,
-//    val numSpots: Int,
-//    val spots: List<SpotTemp> = listOf(),
-//    val friends: List<UserTemp>,
-//)
-
 @Composable
 fun UserHeader(
     username: String,

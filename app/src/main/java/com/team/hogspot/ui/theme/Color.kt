@@ -9,7 +9,8 @@ import androidx.compose.ui.graphics.Color
 val rose500 = Color(0xFFf43f5e) // primary
 val stone800 = Color(0xFF141D21) // background
 val stone700 = Color(0xFF1D292F) // backgroundSecondary
-val stone500 = Color(0xFF737373) // onBackground, textSecondary
+val stone650 = Color(0xFF283035) // onBackground
+val stone500 = Color(0xFF737373) // textSecondary
 val white = Color(0xFFFFFFFF) // textPrimary
 val stone600 = Color(0xFF323C46) // textTertiary
 

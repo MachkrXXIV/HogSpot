@@ -10,15 +10,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Place
@@ -27,12 +30,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -46,8 +53,13 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import com.team.hogspot.R
+import com.team.hogspot.composables.H1
+import com.team.hogspot.composables.H2
 import com.team.hogspot.composables.Header
+import com.team.hogspot.composables.P
 import com.team.hogspot.composables.PrimaryButton
+import com.team.hogspot.composables.SecondaryButton
 import com.team.hogspot.ui.theme.AppTheme
 import com.team.hogspot.util.LocationUtilCallback
 import com.team.hogspot.util.createLocationCallback
@@ -63,7 +75,6 @@ class PlayActivity : ComponentActivity() {
     private var currentLocationState = mutableStateOf<LatLng?>(null)
     private var locationPermissionEnabled = false
     private var locationRequestsEnabled = false
-    private val LOCATION_PERMISSION_REQUEST_CODE = 1000
     private val LOG_TAG = "PlayActivity"
     val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -134,7 +145,6 @@ class PlayActivity : ComponentActivity() {
         //Populate the current location and log
         override fun locationUpdatedCallback(location: Location) {
             mCurrentLocation = location
-//            mapsFragment.changeCenterLocation(GeoPoint(location.latitude, location.longitude))
             currentLocationState.value = LatLng(location.latitude, location.longitude)
             Log.d(
                 LOG_TAG,
@@ -164,9 +174,41 @@ fun PlayPagePreview() {
 }
 
 @Composable
-fun PlayPage(currentLocation: LatLng?, onEnd: () -> Unit = {}) {
+fun PlayPage(currentLocation: LatLng?) {
+    var geospot = LatLng(36.06879351237508, -94.17486855593883)
     var currentView by remember { mutableStateOf(View.MAP) }
     var endClickCount by remember { mutableIntStateOf(0) }
+    var distance by remember { mutableFloatStateOf(0f) }
+
+    fun calculateDistance(): Float {
+        val results = FloatArray(1)
+        if (currentLocation == null) {
+            return -1f
+        }
+        Location.distanceBetween(
+            currentLocation.latitude,
+            currentLocation.longitude,
+            geospot.latitude,
+            geospot.longitude,
+            results
+        )
+        Log.d("GoogleMapView", "Distance(m): ${results[0]}")
+        return results[0]
+    }
+
+    fun onEnd() {
+        if (endClickCount == 0) {
+            distance = calculateDistance()
+        }
+        else if (endClickCount == 1) {
+            // TODO: popup
+        }
+        endClickCount++
+    }
+
+    fun onSwitchView() {
+        currentView = if (currentView == View.MAP) View.INFO else View.MAP
+    }
 
     Box(
         modifier = Modifier
@@ -182,14 +224,14 @@ fun PlayPage(currentLocation: LatLng?, onEnd: () -> Unit = {}) {
         when (currentView) {
             View.MAP -> {
                 if (currentLocation != null) {
-                    GoogleMapView(currentLocation, modifier = Modifier.align(Alignment.Center))
+                    GoogleMapView(currentLocation, modifier = Modifier.align(Alignment.Center), endClickCount)
                 } else {
                     Text("Loading Map")
                 }
             }
 
             View.INFO -> {
-                Text("Info")
+                InfoView(modifier = Modifier.align(Alignment.Center))
             }
         }
         Row(
@@ -197,7 +239,9 @@ fun PlayPage(currentLocation: LatLng?, onEnd: () -> Unit = {}) {
                 .align(Alignment.BottomCenter)
                 .align(Alignment.Center)
                 .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-            IconButton(onClick = {}, modifier = Modifier.align(Alignment.CenterVertically).size(48.dp)) {
+            IconButton(onClick = { onSwitchView() }, modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .size(48.dp)) {
                 when (currentView) {
                     View.MAP -> {
                         Icon(
@@ -218,7 +262,7 @@ fun PlayPage(currentLocation: LatLng?, onEnd: () -> Unit = {}) {
                 }
             }
             PrimaryButton(
-                onClick = onEnd,
+                onClick = { onEnd() },
                 text = "End",
                 modifier = Modifier
                     .padding(16.dp)
@@ -231,14 +275,16 @@ fun PlayPage(currentLocation: LatLng?, onEnd: () -> Unit = {}) {
 @Composable
 fun GoogleMapView(
     currentLocation: LatLng?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    endClickCount: Int,
+    geospot: LatLng = LatLng(36.06879351237508, -94.17486855593883)
 ) {
-    val uark = LatLng(36.06879351237508, -94.17486855593883)
     val currentMarkerState = rememberMarkerState(position = currentLocation!!)
-    val geoSpotMarkerState = rememberMarkerState(position = uark)
+    val geoSpotMarkerState = rememberMarkerState(position = geospot)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(currentLocation, 15f)
+        position = CameraPosition.fromLatLngZoom(currentLocation, 18f)
     }
+
 
     GoogleMap(
         modifier = modifier
@@ -253,6 +299,54 @@ fun GoogleMapView(
                 title = "Current Location",
             )
         }
+        if (endClickCount == 1) {
+            Marker(
+                state = geoSpotMarkerState,
+                title = "Hogspot",
+            )
+        }
+    }
+}
+
+@Composable
+fun InfoView(
+    modifier: Modifier = Modifier
+) {
+    var showHint by remember { mutableStateOf(false) }
+
+    fun onGetHint() {
+        showHint = true
+    }
+
+    Column(
+        modifier = modifier
+    ) {
+        H2(
+            "HogSpot #123"
+        )
+        Image(
+            painter = painterResource(id = R.drawable.spot_image1),
+            contentDescription = null,
+            modifier = Modifier
+                .width(150.dp)
+                .height(150.dp)
+                .clip(AppTheme.shape.container)
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally),
+            contentScale = ContentScale.Crop
+        )
+        SecondaryButton(
+            onClick = {onGetHint()},
+            text = "get hint",
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(0.3f)
+                .align(Alignment.CenterHorizontally)
+        )
+        if (showHint) {
+            P("Hint: There is no hint, if you do not know where we are based on this image you don't go to this school", modifier = Modifier.width(300.dp))
+        }
+
     }
 }
 

@@ -7,6 +7,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.team.hogspot.model.geospot.Difficulty
 import com.team.hogspot.model.geospot.GeoSpot
 import com.team.hogspot.model.geospot.GeoSpotDao
 import com.team.hogspot.model.relations.UserGeoSpotCrossRef
@@ -15,6 +16,7 @@ import com.team.hogspot.model.user.UserDao
 import com.team.hogspot.util.Converters
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 // Annotates class to be a Room Database with a table (entity) of app's models
 @Database(entities = [User::class, GeoSpot::class, UserGeoSpotCrossRef::class], version = 1, exportSchema = false)
@@ -55,12 +57,12 @@ public abstract class AppRoomDatabase : RoomDatabase() {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    populateDatabaseWithMockData(database.userDao())
+                    populateDatabaseWithMockData(database.userDao(),database.geoSpotDao())
                 }
             }
         }
 
-        suspend fun populateDatabaseWithMockData(userDao: UserDao) {
+        suspend fun populateDatabaseWithMockData(userDao: UserDao, spotDao: GeoSpotDao) {
             // Delete all content here.
             Log.d("UserRoomDatabase", "Populating UserRoomDatabase")
             userDao.deleteAll()
@@ -70,6 +72,11 @@ public abstract class AppRoomDatabase : RoomDatabase() {
             val user2 = User(2, "stuartNotLittle", "stuieParaTue@example.com", emptyList())
             userDao.insert(user1)
             userDao.insert(user2)
+
+            val spot1 = GeoSpot(1, 1, "The Big Tree", "tree.jpg", "A big tree", Difficulty.MEDIUM, "Look up", 0.0, 0.0, LocalDateTime.now())
+            val spot2 = GeoSpot(2, 2, "The Small Tree", "tree.jpg", "A small tree", Difficulty.EASY, "Look down", 0.0, 0.0, LocalDateTime.now())
+            spotDao.insert(spot1)
+            spotDao.insert(spot2)
         }
     }
 }

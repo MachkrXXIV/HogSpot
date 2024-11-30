@@ -162,6 +162,73 @@ fun UserInfoCard(
     }
 }
 
+@Composable
+fun UserLeaderboardCard(
+    position: Int,
+    user: UserTemp
+) {
+//        Column {
+//            H2(
+//                text = position.toString(),
+//                color = AppTheme.colorScheme.textPrimary
+//            )
+//            H3(
+//                text = user.username,
+//                color = AppTheme.colorScheme.textPrimary
+//            )
+//            P(
+//                text = user.numSpots.toString(),
+//                color = AppTheme.colorScheme.textSecondary
+//            )
+//        }
+//    }
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
+        ) {
+            // Rank
+            H2(
+                text = position.toString(),
+                color = AppTheme.colorScheme.textPrimary
+            )
+            Spacer(modifier = Modifier.width(50.dp))
+            // Profile Icon
+            ProfileImage(
+                username = user.username,
+                onClick = {},
+                size = ImageSize.SM
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            H2(
+                text = user.username,
+                color = AppTheme.colorScheme.textPrimary
+            )
+            Spacer(modifier = Modifier.width(90.dp))
+            H3(
+                text = user.numSpots.toString(),
+                color = AppTheme.colorScheme.textSecondary
+            )
+        }
+}
+
+@Composable
+fun LeaderBoard(
+    users: List<User>
+) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(180.dp)
+                .clip(AppTheme.shape.container)
+                .background(AppTheme.colorScheme.backgroundSecondary)
+        ) {
+
+
+        }
+}
 
 @Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
@@ -223,6 +290,11 @@ private fun UserCompsPreview() {
             )
             Spacer(modifier = Modifier.height(16.dp))
             UserInfoCards(
+                user = user
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            UserLeaderboardCard(
+                1,
                 user = user
             )
         }

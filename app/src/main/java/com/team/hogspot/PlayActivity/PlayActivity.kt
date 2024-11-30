@@ -1,6 +1,8 @@
 package com.team.hogspot.PlayActivity
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -16,6 +18,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,6 +27,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Icon
@@ -38,10 +44,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -49,13 +59,16 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import com.team.hogspot.R
+import com.team.hogspot.UserActivity.UserActivity
 import com.team.hogspot.composables.H1
 import com.team.hogspot.composables.H2
+import com.team.hogspot.composables.H3
 import com.team.hogspot.composables.Header
 import com.team.hogspot.composables.P
 import com.team.hogspot.composables.PrimaryButton
@@ -173,6 +186,22 @@ fun PlayPagePreview() {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun ResultPopupPreviewSuccess() {
+    AppTheme {
+        ResultPopup(4f)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ResultPopupPreviewFail() {
+    AppTheme {
+        ResultPopup(100f)
+    }
+}
+
 @Composable
 fun PlayPage(currentLocation: LatLng?) {
     var geospot = LatLng(36.06879351237508, -94.17486855593883)
@@ -215,6 +244,9 @@ fun PlayPage(currentLocation: LatLng?) {
             .fillMaxSize()
             .background(color = AppTheme.colorScheme.background)
     ) {
+        if (endClickCount == 2) {
+            ResultPopup(distance)
+        }
         Header(
             pageTitle = "Play",
             username = "Jordi",
@@ -304,6 +336,13 @@ fun GoogleMapView(
                 state = geoSpotMarkerState,
                 title = "Hogspot",
             )
+            Circle(
+                center = geospot,
+                radius = 20.0,
+                fillColor = Color(0x5500FF00),
+                strokeColor = Color.Black,
+                strokeWidth = 2f
+            )
         }
     }
 }
@@ -348,6 +387,64 @@ fun InfoView(
         }
 
     }
+}
+
+@Composable
+fun ResultPopup(
+    distance: Float
+) {
+    val localContext = LocalContext.current
+    fun onFinish() {
+        val intent = Intent(localContext, UserActivity::class.java)
+        localContext.startActivity(intent)
+    }
+   Dialog({onFinish()}) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(280.dp)
+                .clip(AppTheme.shape.container)
+                .background(AppTheme.colorScheme.backgroundSecondary)
+                .padding(AppTheme.size.medium), verticalArrangement = Arrangement.spacedBy(AppTheme.size.normal)
+        ) {
+            Row {
+                if (distance <= 20f) {
+                    H2(
+                        text = "Quest Complete"
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.CheckCircle,
+                        contentDescription = "HogSpot",
+                        tint = AppTheme.colorScheme.difficultyEasy,
+                        modifier = Modifier.size(40.dp).padding(start = 16.dp)
+                    )
+                } else {
+                    H2(
+                        text = "Quest Failed"
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = "HogSpot",
+                        tint = AppTheme.colorScheme.difficultyHard,
+                        modifier = Modifier.size(40.dp).padding(start = 16.dp)
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            H3(
+                text = "Distance from spot: $distance meters",
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            PrimaryButton(
+                onClick = { onFinish() },
+                text = "Finish",
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(0.75f)
+            )
+        }
+   }
+
 }
 
 enum class View {

@@ -31,6 +31,7 @@ import com.team.hogspot.composables.SecondaryButton
 import com.team.hogspot.composables.SpotCarousel
 import com.team.hogspot.composables.UserHeader
 import com.team.hogspot.composables.UserInfoCards
+import com.team.hogspot.model.user.User
 import com.team.hogspot.model.user.UserRepository
 import com.team.hogspot.ui.theme.AppTheme
 import java.time.format.DateTimeFormatter
@@ -66,7 +67,13 @@ fun UserPreview() {
 
 @Composable
 fun UserPage(viewModel: UserViewModel) {
-    val user = viewModel.currentUser.value
+//    val user = viewModel.currentUser.value
+    val user = User(
+        userId = 1,
+        userName = "please_give_us_a_good_grade",
+        email = "icespice@example.com",
+        friends = listOf(),
+    )
 
     Box(
         modifier = Modifier

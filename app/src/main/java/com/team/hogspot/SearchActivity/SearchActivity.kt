@@ -1,6 +1,7 @@
 package com.team.hogspot.SearchActivity
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Space
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,12 +20,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
+import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.R
 import com.team.hogspot.composables.Difficulty
 import com.team.hogspot.composables.H3
@@ -42,7 +49,11 @@ class SearchActivity : ComponentActivity() {
 
         setContent {
             AppTheme {
-                SearchPage(onSearch = {})
+                SearchPage(
+                    onSearch = {},
+                    userId = "1",
+                    navController = null,
+                )
             }
         }
     }
@@ -58,14 +69,38 @@ class SearchActivity : ComponentActivity() {
 @Composable
 fun SearchPreview() {
     AppTheme {
-        SearchPage(onSearch = {})
+        SearchPage(
+            onSearch = {},
+            userId = "1",
+            navController = null,
+        )
     }
 }
 
 @Composable
-fun SearchPage(
-    onSearch: () -> Unit
+fun SearchScreen(
+    id: String,
+    navController: NavController
 ) {
+    SearchPage(
+        onSearch = {},
+        onUserClick = {
+            navController.navigate(Screen.UserScreen.withArgs(id))
+        },
+        navController = navController,
+        userId = id
+    )
+}
+
+@Composable
+fun SearchPage(
+    onSearch: () -> Unit,
+    onUserClick: () -> Unit = {},
+    navController: NavController? = null,
+    userId: String
+) {
+    var search by remember { mutableStateOf("Search...") }
+
     val searchResults = listOf(
         Hogspot(
             id = 1,
@@ -112,12 +147,16 @@ fun SearchPage(
             Header(
                 pageTitle = "Search",
                 username = "Jordi",
+                onUserClick = onUserClick
             )
             Spacer(modifier = Modifier.height(16.dp))
             Input(
-                type="Search",
-                placeholder="Search Hogspot",
                 iconId = R.drawable.search_icon,
+                value = search,
+                onValueChange = {
+                    search = it
+                    Log.d("SearchActivity", "updated search: $search")
+                }
             )
             Spacer(modifier = Modifier.height(32.dp))
             // map search results
@@ -131,7 +170,9 @@ fun SearchPage(
                     searchResults.forEach { hogspot ->
                         SearchItem(
                             hogspot = hogspot,
-                            onClick = {} // TODO: launch hogspot detailed activity with hogspot.id
+                            onClick = {
+                               navController?.navigate(Screen.DetailedSpotScreen.withArgs(hogspot.id.toString()))
+                            }
                         )
                     }
                 }
@@ -139,6 +180,8 @@ fun SearchPage(
 
             Navbar(
                 activePage = "Search",
+                navController = navController,
+                userId = userId
             )
         }
     }

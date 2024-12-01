@@ -1,6 +1,5 @@
 package com.team.hogspot.composables
 
-import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +31,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.team.hogspot.Navigation.Screen
 
 
 @Composable
@@ -39,9 +40,9 @@ fun Header (
     pageTitle: String,
     showBackButton: Boolean = false,
     showUserProfile: Boolean = true,
-    username: String,
+    username: String = "",
     onUserClick: () -> Unit = {},
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {},
 ) {
     Row(
         modifier = Modifier
@@ -189,12 +190,16 @@ interface User {
 @Composable
 fun Navbar(
     activePage: String,
+    navController: NavController? = null,
+    userId: String,
     modifier: Modifier = Modifier
 ) {
     val items = listOf(
         object : NavItemProps {
             override val text = "Explore"
-            override val onClick = {}
+            override val onClick: () -> Unit = {
+                navController?.navigate(Screen.ExploreScreen.withArgs(userId))
+            }
             override val iconId = R.drawable.compass_icon
             override val isActive = activePage == "Explore"
 
@@ -202,14 +207,18 @@ fun Navbar(
         },
         object : NavItemProps {
             override val text = "Search"
-            override val onClick = {}
+            override val onClick: () -> Unit = {
+                navController?.navigate(Screen.SearchScreen.withArgs(userId))
+            }
             override val iconId = R.drawable.search_icon
             override val isActive = activePage == "Search"
 
         },
         object : NavItemProps {
             override val text = "Your Spots"
-            override val onClick = {}
+            override val onClick: () -> Unit = {
+                navController?.navigate(Screen.UserScreen.withArgs(userId))
+            }
             override val iconId = R.drawable.map_icon
             override val isActive = activePage == "Your Spots"
         }
@@ -266,6 +275,8 @@ private fun PreviewNavigation() {
 
             Navbar(
                 activePage = "Explore",
+                navController = null,
+                userId = "1"
             )
 
         }

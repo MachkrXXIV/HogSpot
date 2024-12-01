@@ -1,10 +1,13 @@
 package com.team.hogspot.LoginActivity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
@@ -21,12 +24,22 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults.textFieldColors
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.team.hogspot.App
+import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.UserViewModel
 import com.team.hogspot.UserViewModelFactory
+import com.team.hogspot.composables.Header
+import com.team.hogspot.composables.Input
+import com.team.hogspot.composables.InputSize
+import com.team.hogspot.composables.P
+import com.team.hogspot.composables.PrimaryButton
+import com.team.hogspot.ui.theme.AppTheme
 
 class SignUpActivity : ComponentActivity() {
     private val userViewModel: UserViewModel by viewModels {
@@ -38,125 +51,151 @@ class SignUpActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent{
-            MyLoginApplicationTheme {
-                SignUpForm(onBackClick = { backPressed() }, onSignUp = { email, userName -> signUp(email, userName) })
+            AppTheme {
+                SignUpForm(
+                    onBackClick = { },
+                    onSignUp = { email, username ->
+                        val id = insertIntoDB(email, username)
+                        id.toString()
+                    },
+                    onNavigate = {  },
+                    onNavigateToLogin = {  }
+                )
             }
         }
     }
 
-    private fun backPressed() {
-        onBackPressedDispatcher.onBackPressed()
-    }
 
-    private fun signUp(email: String, userName: String) {
-        userViewModel.signUp(email, userName)
-    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun SignUpFormPreview() {
-    MyLoginApplicationTheme {
-        SignUpForm(onBackClick = {})
+    AppTheme {
+         SignUpForm(
+            onBackClick = { },
+            onSignUp = { email, username ->
+                val id = insertIntoDB(email, username)
+                id.toString()
+            },
+            onNavigate = {  },
+            onNavigateToLogin = {  }
+         )
     }
+}
+
+@Composable
+fun SignUpScreen(navController: NavController) {
+    SignUpForm(
+        onBackClick = {navController.popBackStack() },
+        onSignUp = { email, username ->
+            val id = insertIntoDB(email, username)
+            id.toString()
+        },
+        onNavigate = { id ->
+            navController.navigate(Screen.ExploreScreen.withArgs(id))
+        },
+        onNavigateToLogin = { navController.navigate(Screen.LoginScreen.route) }
+    )
+}
+
+fun insertIntoDB(email: String, username: String): String {
+    // TODO: insert into db
+    // val id = userViewModel.insert(email, username)
+    // right now, return a dummy id
+    return "1"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpForm(onBackClick: () -> Unit = {}, onSignUp: (String, String) -> Unit = {email, userName ->}) {
-    var email by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
+fun SignUpForm(
+    onBackClick: () -> Unit = {},
+    onSignUp: (String, String) -> String,
+    onNavigate: (String) -> Unit,
+    onNavigateToLogin: () -> Unit
+) {
+    var email by remember { mutableStateOf("Email...") }
+    var username by remember { mutableStateOf("Username...") }
+    var password by remember { mutableStateOf("Password...") }
+    var confirmPassword by remember { mutableStateOf("Confirm Password...") }
 
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize().padding(35.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(AppTheme.colorScheme.background)
+            .padding(35.dp)
     ) {
-        TopAppBar(
-            title = { Text("Back", color = Color.White) },
-            navigationIcon = {
-                IconButton(onClick = { onBackClick() }) {
-                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF101820))
+        Header(
+            pageTitle = "Sign up.",
+            showBackButton = true,
+            showUserProfile = false,
+            onBackClick = onBackClick,
         )
-        Text(text = "Sign Up", style = MaterialTheme.typography.headlineMedium, color = Color.White)
-        Spacer(modifier = Modifier.height(16.dp))
-        TextField(
+
+        Spacer(modifier = Modifier.height(32.dp))
+        Input(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth(),
-            colors =
-            textFieldColors(
-                unfocusedContainerColor= Color(0xFF101820),
-                focusedContainerColor = Color(0xFF1C2A3A),
-                focusedTextColor = Color.White,
-                focusedLabelColor = Color.White,
-                cursorColor = Color.White,
-                focusedIndicatorColor = Color.White
-            )
+            shape = AppTheme.shape.containerRoundedTop,
+            iconId = -1,
+            size = InputSize.XS
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        TextField(
+        Input(
             value = username,
-            onValueChange = { username = it },
-            label = { Text("Username") },
-            modifier = Modifier.fillMaxWidth(),
-            colors =
-            textFieldColors(
-                unfocusedContainerColor= Color(0xFF101820),
-                focusedContainerColor = Color(0xFF1C2A3A),
-                focusedTextColor = Color.White,
-                focusedLabelColor = Color.White,
-                cursorColor = Color.White,
-                focusedIndicatorColor = Color.White
-            )
+            onValueChange = { username = it},
+            shape = AppTheme.shape.containerRoundedNone,
+            iconId = -1,
+            size = InputSize.XS
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        TextField(
+        Input(
             value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth(),
-            colors =
-            textFieldColors(
-                unfocusedContainerColor= Color(0xFF101820),
-                focusedContainerColor = Color(0xFF1C2A3A),
-                focusedTextColor = Color.White,
-                focusedLabelColor = Color.White,
-                cursorColor = Color.White,
-                focusedIndicatorColor = Color.White
-            )
+            onValueChange = { password = it},
+            shape = AppTheme.shape.containerRoundedNone,
+            iconId = -1,
+            size = InputSize.XS
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        TextField(
+        Input(
             value = confirmPassword,
-            onValueChange = { confirmPassword = it },
-            label = { Text("Confirm Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth(),
-            colors =
-            textFieldColors(
-                unfocusedContainerColor= Color(0xFF101820),
-                focusedContainerColor = Color(0xFF1C2A3A),
-                focusedTextColor = Color.White,
-                focusedLabelColor = Color.White,
-                cursorColor = Color.White,
-                focusedIndicatorColor = Color.White
-            )
+            onValueChange = {
+                confirmPassword = it
+                Log.d("SignUpActivity", "updated confirmPassword: $confirmPassword")
+            },
+            shape = AppTheme.shape.containerRoundedBottom,
+            iconId = -1,
+            size = InputSize.XS
         )
+        Spacer(modifier = Modifier.height(64.dp))
+        PrimaryButton(
+            text = "SIGN UP",
+            onClick = {
+                val id: String = onSignUp(email, username)
+                if (id != "-1")
+                    onNavigate(id)
+            },
+            shape = AppTheme.shape.container,
+            isActive = false,
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = { onSignUp(email, username) },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF325E25)),
+
+        Row (
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Sign Up")
+            Box(
+                modifier = Modifier.clickable { onNavigateToLogin() },
+                contentAlignment = Alignment.Center
+            ) {
+                P(
+                    text = "Already have an account? Login",
+                    color = AppTheme.colorScheme.textSecondary,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+
         }
     }
 }

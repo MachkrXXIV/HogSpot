@@ -45,6 +45,7 @@ data class AppShape(
     val profileImage: Shape,
     val containerRoundedTop: Shape,
     val containerRoundedBottom: Shape,
+    val containerRoundedNone: Shape,
     val tag: Shape,
 ) {
 }
@@ -93,6 +94,7 @@ val LocalAppShape = staticCompositionLocalOf {
         profileImage = RectangleShape,
         containerRoundedTop = RectangleShape,
         containerRoundedBottom = RectangleShape,
+        containerRoundedNone = RectangleShape,
         tag = RectangleShape,
     )
 }

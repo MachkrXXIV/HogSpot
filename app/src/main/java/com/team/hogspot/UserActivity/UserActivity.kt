@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,33 +19,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.team.hogspot.App
+import androidx.navigation.NavController
+import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.R
-import com.team.hogspot.UserViewModel
-import com.team.hogspot.UserViewModelFactory
+import com.team.hogspot.composables.Difficulty
 import com.team.hogspot.composables.H2
 import com.team.hogspot.composables.Header
+import com.team.hogspot.composables.Hogspot
 import com.team.hogspot.composables.Navbar
 import com.team.hogspot.composables.SecondaryButton
 import com.team.hogspot.composables.SpotCarousel
 import com.team.hogspot.composables.UserHeader
 import com.team.hogspot.composables.UserInfoCards
-import com.team.hogspot.model.user.User
-import com.team.hogspot.model.user.UserRepository
+import com.team.hogspot.composables.UserTemp
 import com.team.hogspot.ui.theme.AppTheme
-import java.time.format.DateTimeFormatter
 
 class UserActivity : ComponentActivity() {
-    private val userViewModel: UserViewModel by viewModels {
-        UserViewModelFactory((application as App).userRepository)
-    }
     override fun onCreate(savedInstancesBundle: Bundle?) {
         super.onCreate(savedInstancesBundle)
         enableEdgeToEdge()
 
         setContent {
             AppTheme {
-                UserPage(userViewModel)
+                //
             }
         }
     }
@@ -58,21 +53,103 @@ class UserActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun UserPreview() {
-    lateinit var mockViewModel: UserViewModel
     AppTheme {
-        UserPage(mockViewModel)
+        UserPage(
+            userId = "1",
+            navController = null
+        )
     }
+}
+
+@Composable
+fun UserScreen(
+    id: String,
+    navController: NavController
+) {
+    UserPage(
+        userId = id,
+        navController = navController
+    )
 }
 
 
 @Composable
-fun UserPage(viewModel: UserViewModel) {
-//    val user = viewModel.currentUser.value
-    val user = User(
-        userId = 1,
-        userName = "please_give_us_a_good_grade",
-        email = "icespice@example.com",
-        friends = listOf(),
+fun UserPage(
+    userId: String,
+    navController: NavController? = null
+) {
+
+    val user = UserTemp(
+        id = 1,
+        username = "Jordi Castro",
+        email = "jordi@gmail.com",
+        dateJoined = "10/12/24",
+        streak = 5,
+        numSpots = 3,
+        spots = listOf(
+            Hogspot(
+                id = 1,
+                title = "Title1",
+                description = "Description1",
+                location = "Location1",
+                date = "12.2.2024",
+                imageUrls = "ImageUrls1",
+                rating = 3.0f,
+                difficulty = Difficulty.EASY
+            ),
+            Hogspot(
+                id = 2,
+                title = "Title2",
+                description = "Description2",
+                location = "Location2",
+                date = "12.2.2024",
+                imageUrls = "ImageUrls2",
+                rating = 4.0f,
+                difficulty = Difficulty.MEDIUM
+            ),
+            Hogspot(
+                id = 3,
+                title = "Title3",
+                description = "Description3",
+                location = "Location3",
+                date = "12.2.2024",
+                imageUrls = "ImageUrls3",
+                rating = 5.0f,
+                difficulty = Difficulty.HARD
+            )
+        ),
+        friends = listOf(
+            UserTemp(
+                id = 1,
+                username = "Bob",
+                email = "bob@gmail.com",
+                dateJoined = "10/12/24",
+                streak = 4,
+                numSpots = 2,
+                spots = listOf(),
+                friends = listOf()
+                ),
+            UserTemp(
+                id = 2,
+                username = "Kevin",
+                email = "kevin@gmail.com",
+                dateJoined = "10/12/24",
+                streak = 0,
+                numSpots = 1,
+                spots = listOf(),
+                friends = listOf()
+            ),
+            UserTemp(
+                id = 1,
+                username = "Stuart",
+                email = "stuart@gmail.com",
+                dateJoined = "10/12/2024",
+                streak = 17,
+                numSpots = 14,
+                spots = listOf(),
+                friends = listOf()
+            ),
+        )
     )
 
     Box(
@@ -87,7 +164,7 @@ fun UserPage(viewModel: UserViewModel) {
             ) {
             Header(
                 pageTitle = "User",
-                username = user!!.userName,
+                username = "Jordi",
                 showUserProfile = false,
             )
 
@@ -99,8 +176,8 @@ fun UserPage(viewModel: UserViewModel) {
                     .verticalScroll(rememberScrollState())
             ) {
                 UserHeader(
-                    username = user!!.userName,
-                    dateJoined = user?.dateJoined?.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")).toString()
+                    username = user.username,
+                    dateJoined = user.dateJoined
                 )
 
                 Spacer(modifier = Modifier.height(36.dp))
@@ -117,15 +194,21 @@ fun UserPage(viewModel: UserViewModel) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 SpotCarousel(
-                    spots = viewModel.savedGeoSpots.value!!
+                    spots = user.spots,
+                    onSpotClick = { hogspot ->
+                        navController?.navigate(Screen.DetailedSpotScreen.withArgs(hogspot.id.toString()))
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(36.dp))
 
                 SecondaryButton(
-                    onClick = {},
+                    onClick = {
+                         navController?.navigate(Screen.NewSpotScreen.route)
+                    },
                     text = "New HogSpot",
                     iconId = R.drawable.plus_icon,
+                    iconColor = AppTheme.colorScheme.primary,
                     shape = AppTheme.shape.container,
                     modifier = Modifier
                         .height(64.dp)
@@ -137,6 +220,8 @@ fun UserPage(viewModel: UserViewModel) {
 
             Navbar(
                 activePage = "Your Spots",
+                navController = navController,
+                userId = userId
             )
 
         }

@@ -24,6 +24,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.team.hogspot.Navigation.Screen
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,14 +34,20 @@ class LoginActivity : ComponentActivity() {
 
         setContent{
             MyLoginApplicationTheme {
-                LoginForm(onBackClick = { backPressed() })
+                LoginForm(
+                    onBackClick = {  },
+                    onLogin = { username, password ->
+                        val id = login(username, password)
+                        id.toString()
+                    },
+                    onNavigate = {  }
+
+                )
             }
         }
     }
 
-    private fun backPressed() {
-        onBackPressedDispatcher.onBackPressed()
-    }
+
 }
 
 @Composable
@@ -55,13 +63,37 @@ fun MyLoginApplicationTheme(content: @Composable () -> Unit) {
 @Composable
 fun LoginFormPreview() {
     MyLoginApplicationTheme {
-        LoginForm(onBackClick = {})
+        // LoginForm(onBackClick = {})
     }
+}
+
+@Composable
+fun LoginScreen(navController: NavController) {
+    LoginForm(
+        onBackClick = { navController.popBackStack() },
+        onLogin = { username, password ->
+            val id = login(username, password)
+            id.toString()
+        },
+        onNavigate = { id ->
+            navController.navigate(Screen.ExploreScreen.withArgs(id))
+        }
+    )
+}
+
+fun login(username: String, password: String): String {
+    // TODO: search for user in database
+    // right now, return a dummy id
+    return "2"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginForm(onBackClick: () -> Unit) {
+fun LoginForm(
+    onBackClick: () -> Unit,
+    onLogin: (String, String) -> String,
+    onNavigate: (String) -> Unit = {}
+) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -115,7 +147,11 @@ fun LoginForm(onBackClick: () -> Unit) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { /* Handle login */ },
+            onClick = {
+                val id = onLogin(username, password)
+                if (id != "-1")
+                    onNavigate(id)
+            },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFCC323E)),
             modifier = Modifier.fillMaxWidth()
         ) {

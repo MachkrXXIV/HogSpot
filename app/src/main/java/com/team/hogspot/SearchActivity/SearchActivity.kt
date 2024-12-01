@@ -25,6 +25,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
+import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.R
 import com.team.hogspot.composables.Difficulty
 import com.team.hogspot.composables.H3
@@ -42,7 +44,11 @@ class SearchActivity : ComponentActivity() {
 
         setContent {
             AppTheme {
-                SearchPage(onSearch = {})
+                SearchPage(
+                    onSearch = {},
+                    userId = "1",
+                    navController = null,
+                )
             }
         }
     }
@@ -58,13 +64,35 @@ class SearchActivity : ComponentActivity() {
 @Composable
 fun SearchPreview() {
     AppTheme {
-        SearchPage(onSearch = {})
+        SearchPage(
+            onSearch = {},
+            userId = "1",
+            navController = null,
+        )
     }
 }
 
 @Composable
+fun SearchScreen(
+    id: String,
+    navController: NavController
+) {
+    SearchPage(
+        onSearch = {},
+        onUserClick = {
+            navController.navigate(Screen.UserScreen.withArgs(id))
+        },
+        navController = navController,
+        userId = id
+    )
+}
+
+@Composable
 fun SearchPage(
-    onSearch: () -> Unit
+    onSearch: () -> Unit,
+    onUserClick: () -> Unit = {},
+    navController: NavController? = null,
+    userId: String
 ) {
     val searchResults = listOf(
         Hogspot(
@@ -112,6 +140,7 @@ fun SearchPage(
             Header(
                 pageTitle = "Search",
                 username = "Jordi",
+                onUserClick = onUserClick
             )
             Spacer(modifier = Modifier.height(16.dp))
             Input(
@@ -131,7 +160,9 @@ fun SearchPage(
                     searchResults.forEach { hogspot ->
                         SearchItem(
                             hogspot = hogspot,
-                            onClick = {} // TODO: launch hogspot detailed activity with hogspot.id
+                            onClick = {
+                               navController?.navigate(Screen.DetailedSpotScreen.withArgs(hogspot.id.toString()))
+                            }
                         )
                     }
                 }
@@ -139,6 +170,8 @@ fun SearchPage(
 
             Navbar(
                 activePage = "Search",
+                navController = navController,
+                userId = userId
             )
         }
     }

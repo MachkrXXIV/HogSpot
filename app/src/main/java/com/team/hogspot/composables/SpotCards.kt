@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.team.hogspot.R
 import com.team.hogspot.ui.theme.AppTheme
 
@@ -132,7 +133,8 @@ fun SpotCarousel(
 
 @Composable
 fun DetailedSpotCard(
-    hogspot: Hogspot
+    hogspot: Hogspot,
+    onPlayClick: () -> Unit = {}
 
 ) {
     Column(
@@ -201,7 +203,7 @@ fun DetailedSpotCard(
         ) {
             PrimaryButton(
                 text = "Play",
-                onClick = {},
+                onClick = onPlayClick,
                 modifier = Modifier
                     .width(200.dp),
                 shape = AppTheme.shape.container

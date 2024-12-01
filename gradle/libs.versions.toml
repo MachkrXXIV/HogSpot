@@ -19,6 +19,8 @@ roomRuntime = "2.5.2"
 lifecycleViewmodelKtx = "2.9.0-alpha06"
 lifecycleLivedataKtx = "2.9.0-alpha06"
 lifecycleCommonJava8 = "2.9.0-alpha06"
+navigationRuntimeKtx = "2.8.4"
+navigationCompose = "2.8.4"
 
 
 [libraries]
@@ -47,6 +49,8 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
 androidx-lifecycle-common-java8 = { group = "androidx.lifecycle", name = "lifecycle-common-java8", version.ref = "lifecycleCommonJava8" }
+androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

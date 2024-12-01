@@ -1,5 +1,6 @@
 package com.team.hogspot.DetailedSpotActivity
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.composables.DetailedSpotCard
 import com.team.hogspot.composables.Difficulty
 import com.team.hogspot.composables.H1
@@ -32,13 +35,35 @@ import com.team.hogspot.ui.theme.AppTheme
 @Composable
 fun DetailedSpotPreview() {
     AppTheme {
-        DetailedSpotPage()
+        DetailedSpotPage(userId = "1")
     }
 }
 
 @Composable
-fun DetailedSpotPage (
+fun DetailedSpotScreen(
+    id: String,
+    navController: NavController
+) {
+    DetailedSpotPage(
+        userId = id,
+        onPlayClick = { spotId -> // TODO: implement PlayScreen and route
+            Log.d("DetailedSpotScreen", "Play button clicked for spot $spotId")
+            // navController.navigate(Screen.PlayScreen.route + "/$spotId")
+        },
+        onUserClick = {
+            navController.navigate(Screen.UserScreen.withArgs(id))
+        },
+        navController = navController
+    )
+}
 
+
+@Composable
+fun DetailedSpotPage (
+    userId: String,
+    navController: NavController? = null,
+    onPlayClick: (String) -> Unit = {},
+    onUserClick: () -> Unit = {}
 ) {
 
     val spots = listOf(
@@ -90,6 +115,10 @@ fun DetailedSpotPage (
                 pageTitle = "Spot",
                 username = "Jordi",
                 showBackButton = true,
+                onBackClick = {
+                    navController?.popBackStack()
+                },
+                onUserClick = onUserClick
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -103,6 +132,7 @@ fun DetailedSpotPage (
                 Spacer(modifier = Modifier.height(12.dp))
                 DetailedSpotCard(
                     hogspot = hogspot,
+                    onPlayClick = { onPlayClick(hogspot.id.toString()) }
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -114,12 +144,17 @@ fun DetailedSpotPage (
                 Spacer(modifier = Modifier.height(12.dp))
 
                 SpotCarousel(
-                    spots = spots
+                    spots = spots,
+                    onSpotClick = { hogspot ->
+                        navController?.navigate(Screen.DetailedSpotScreen.withArgs(hogspot.id.toString()))
+                    }
                 )
             }
 
             Navbar(
                 activePage = "Search",
+                navController = navController,
+                userId = userId
             )
 
         }

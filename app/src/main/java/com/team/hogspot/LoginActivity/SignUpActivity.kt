@@ -24,7 +24,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.team.hogspot.App
+import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.UserViewModel
 import com.team.hogspot.UserViewModelFactory
 
@@ -39,31 +41,57 @@ class SignUpActivity : ComponentActivity() {
 
         setContent{
             MyLoginApplicationTheme {
-                SignUpForm(onBackClick = { backPressed() }, onSignUp = { email, userName -> signUp(email, userName) })
+                SignUpForm(
+                    onBackClick = { },
+                    onSignUp = { email, username ->
+                        val id = insertIntoDB(email, username)
+                        id.toString()
+                    },
+                    onNavigate = {  }
+                )
             }
         }
     }
 
-    private fun backPressed() {
-        onBackPressedDispatcher.onBackPressed()
-    }
 
-    private fun signUp(email: String, userName: String) {
-        userViewModel.signUp(email, userName)
-    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun SignUpFormPreview() {
     MyLoginApplicationTheme {
-        SignUpForm(onBackClick = {})
+        // SignUpForm()
     }
+}
+
+@Composable
+fun SignUpScreen(navController: NavController) {
+    SignUpForm(
+        onBackClick = {navController.popBackStack() },
+        onSignUp = { email, username ->
+            val id = insertIntoDB(email, username)
+            id.toString()
+        },
+        onNavigate = { id ->
+            navController.navigate(Screen.ExploreScreen.withArgs(id))
+        }
+    )
+}
+
+fun insertIntoDB(email: String, username: String): String {
+    // TODO: insert into db
+    // val id = userViewModel.insert(email, username)
+    // right now, return a dummy id
+    return "1"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpForm(onBackClick: () -> Unit = {}, onSignUp: (String, String) -> Unit = {email, userName ->}) {
+fun SignUpForm(
+    onBackClick: () -> Unit = {},
+    onSignUp: (String, String) -> String,
+    onNavigate: (String) -> Unit
+) {
     var email by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -152,7 +180,11 @@ fun SignUpForm(onBackClick: () -> Unit = {}, onSignUp: (String, String) -> Unit 
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { onSignUp(email, username) },
+            onClick = {
+                val id: String = onSignUp(email, username)
+                if (id != "-1")
+                    onNavigate(id)
+          },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF325E25)),
             modifier = Modifier.fillMaxWidth()
         ) {

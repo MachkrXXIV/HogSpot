@@ -19,9 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.R
+import com.team.hogspot.composables.Difficulty
 import com.team.hogspot.composables.H2
 import com.team.hogspot.composables.Header
+import com.team.hogspot.composables.Hogspot
 import com.team.hogspot.composables.Navbar
 import com.team.hogspot.composables.SecondaryButton
 import com.team.hogspot.composables.SpotCarousel
@@ -50,13 +54,30 @@ class UserActivity : ComponentActivity() {
 @Composable
 fun UserPreview() {
     AppTheme {
-        UserPage()
+        UserPage(
+            userId = "1",
+            navController = null
+        )
     }
+}
+
+@Composable
+fun UserScreen(
+    id: String,
+    navController: NavController
+) {
+    UserPage(
+        userId = id,
+        navController = navController
+    )
 }
 
 
 @Composable
-fun UserPage() {
+fun UserPage(
+    userId: String,
+    navController: NavController? = null
+) {
 
     val user = UserTemp(
         id = 1,
@@ -65,6 +86,38 @@ fun UserPage() {
         dateJoined = "10/12/24",
         streak = 5,
         numSpots = 3,
+        spots = listOf(
+            Hogspot(
+                id = 1,
+                title = "Title1",
+                description = "Description1",
+                location = "Location1",
+                date = "12.2.2024",
+                imageUrls = "ImageUrls1",
+                rating = 3.0f,
+                difficulty = Difficulty.EASY
+            ),
+            Hogspot(
+                id = 2,
+                title = "Title2",
+                description = "Description2",
+                location = "Location2",
+                date = "12.2.2024",
+                imageUrls = "ImageUrls2",
+                rating = 4.0f,
+                difficulty = Difficulty.MEDIUM
+            ),
+            Hogspot(
+                id = 3,
+                title = "Title3",
+                description = "Description3",
+                location = "Location3",
+                date = "12.2.2024",
+                imageUrls = "ImageUrls3",
+                rating = 5.0f,
+                difficulty = Difficulty.HARD
+            )
+        ),
         friends = listOf(
             UserTemp(
                 id = 1,
@@ -141,13 +194,18 @@ fun UserPage() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 SpotCarousel(
-                    spots = user.spots
+                    spots = user.spots,
+                    onSpotClick = { hogspot ->
+                        navController?.navigate(Screen.DetailedSpotScreen.withArgs(hogspot.id.toString()))
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(36.dp))
 
                 SecondaryButton(
-                    onClick = {},
+                    onClick = {
+                         navController?.navigate(Screen.NewSpotScreen.route)
+                    },
                     text = "New HogSpot",
                     iconId = R.drawable.plus_icon,
                     shape = AppTheme.shape.container,
@@ -161,6 +219,8 @@ fun UserPage() {
 
             Navbar(
                 activePage = "Your Spots",
+                navController = navController,
+                userId = userId
             )
 
         }

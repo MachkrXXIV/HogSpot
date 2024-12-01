@@ -2,6 +2,7 @@ package com.team.hogspot.NewSpotActivity
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -19,6 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.R
 import com.team.hogspot.composables.H2
 import com.team.hogspot.composables.Header
@@ -64,10 +67,31 @@ fun NewSpotPreview() {
 }
 
 @Composable
+fun NewSpotScreen(
+    navController: NavController
+) {
+    NewSpotPage(
+        onBackClick = {
+            navController.popBackStack()
+        },
+        onImageClick = { // TODO: Launch image gallery / picker
+            Log.d("NewSpotActivity", "Image clicked")
+        },
+        onSubmit = {
+            Log.d("NewSpotActivity", "Submit clicked")
+            // TODO: submit form data to hogspot spot table
+            // redirect back to your spots (popBackStack)
+            // toast creation of new spot
+            navController.popBackStack()
+        }
+    )
+}
+
+@Composable
 fun NewSpotPage(
     onBackClick: () -> Unit,
     onImageClick: () -> Unit,
-    onSubmit: () -> Unit
+    onSubmit: () -> Unit // TODO: (formDataObject) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -85,6 +109,7 @@ fun NewSpotPage(
                 username = "Jordi",
                 showBackButton = true,
                 showUserProfile = false,
+                onBackClick = onBackClick,
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -182,10 +207,12 @@ fun NewSpotPage(
                 Spacer(modifier = Modifier.height(28.dp))
 
             }
-    
+
 
             Navbar(
-                activePage = "Your Spots"
+                activePage = "Your Spots",
+                navController = null,
+                userId = "1"
             )
 
         }

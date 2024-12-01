@@ -14,7 +14,7 @@
         android:theme="@style/Theme.HogSpot"
         tools:targetApi="31">
         <activity
-            android:name=".LoginActivity.StartingPageActivity"
+            android:name=".LoginActivity.LandingScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

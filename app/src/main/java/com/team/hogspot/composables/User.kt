@@ -8,31 +8,25 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.team.hogspot.model.user.User
 import com.team.hogspot.ui.theme.AppTheme
-
-
-data class UserTemp(
-    val id: Int,
-    val username: String,
-    val email: String,
-    val dateJoined: String,
-    val streak: Int,
-    val numSpots: Int,
-    val spots: List<Hogspot> = listOf(),
-    val friends: List<UserTemp>,
-)
-
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 @Composable
 fun UserHeader(
     username: String,
@@ -92,7 +86,7 @@ fun formatDate(dateJoined: String): String {
 
 @Composable
 fun UserInfoCards(
-    user: UserTemp
+    user: User
 ) {
     Row (
         modifier = Modifier.fillMaxWidth(),
@@ -162,46 +156,14 @@ fun UserInfoCard(
 @Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 private fun UserCompsPreview() {
-
-    val user = UserTemp(
-        id = 1,
-        username = "Jordi Castro",
+    val user = User(
+        userId = 1,
+        userName = "Jordi Castro",
         email = "jordi@gmail.com",
-        dateJoined = "10/12/2024",
+        dateJoined = LocalDateTime.now(),
         streak = 5,
         numSpots = 3,
-        friends = listOf(
-            UserTemp(
-                id = 1,
-                username = "Bob",
-                email = "bob@gmail.com",
-                dateJoined = "10/12/2024",
-                streak = 4,
-                numSpots = 2,
-                spots = listOf(),
-                friends = listOf()
-            ),
-            UserTemp(
-                id = 2,
-                username = "Kevin",
-                email = "kevin@gmail.com",
-                dateJoined = "10/12/2024",
-                streak = 0,
-                numSpots = 1,
-                spots = listOf(),
-                friends = listOf()
-            ),
-            UserTemp(
-                id = 1,
-                username = "Stuart",
-                email = "stuart@gmail.com",
-                dateJoined = "10/12/2024",
-                streak = 17,
-                numSpots = 14,
-                spots = listOf(),
-                friends = listOf()
-            ),
-        )
+        friends = listOf()
     )
 
     AppTheme{
@@ -214,8 +176,8 @@ private fun UserCompsPreview() {
 
         ) {
             UserHeader(
-                username = user.username,
-                dateJoined = user.dateJoined
+                username = user.userName,
+                dateJoined = DateTimeFormatter.ofPattern("MM/dd/yyyy").format(user.dateJoined)
             )
             Spacer(modifier = Modifier.height(16.dp))
             UserInfoCards(

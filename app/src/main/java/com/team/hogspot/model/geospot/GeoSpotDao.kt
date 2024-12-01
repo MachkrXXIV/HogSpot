@@ -13,7 +13,7 @@ interface GeoSpotDao {
 
     @MapInfo(keyColumn = "geoSpotId")
     @Query("SELECT * FROM geo_spot_table ORDER BY geoSpotId ASC")
-    fun getAllGeoSpots(): Flow<Map<Int,GeoSpot>>
+    fun getAllGeoSpots(): Flow<Map<Long,GeoSpot>>
 
     @Update
     suspend fun update(geoSpot: GeoSpot)

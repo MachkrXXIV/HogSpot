@@ -37,6 +37,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {
@@ -87,4 +88,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.common.java8)
     // GSON
     implementation(libs.gson)
+    // GoogleMaps
+    implementation(libs.play.services.maps)
+    implementation(libs.maps.compose)
 }

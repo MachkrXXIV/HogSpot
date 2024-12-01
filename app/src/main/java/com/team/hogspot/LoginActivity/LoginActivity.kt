@@ -1,6 +1,7 @@
 package com.team.hogspot.LoginActivity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -111,8 +112,8 @@ fun LoginForm(
     onLogin: (String, String) -> String,
     onNavigate: (String) -> Unit = {}
 ) {
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("username...") }
+    var password by remember { mutableStateOf("password...") }
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -132,15 +133,18 @@ fun LoginForm(
         Spacer(modifier = Modifier.height(32.dp))
 
         Input(
-            type = "username",
-            placeholder = "Username...",
+            value = username,
+            onValueChange = {
+                username = it
+                Log.d("LoginActivity", "updated username: $it")
+            },
             shape = AppTheme.shape.containerRoundedTop,
             iconId = -1,
             size = InputSize.XS
         )
         Input(
-            type = "password",
-            placeholder = "Password...",
+            value = password,
+            onValueChange = { password = it },
             shape = AppTheme.shape.containerRoundedBottom,
             iconId = -1,
             size = InputSize.XS

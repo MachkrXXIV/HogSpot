@@ -208,6 +208,7 @@ fun UserPage(
                     },
                     text = "New HogSpot",
                     iconId = R.drawable.plus_icon,
+                    iconColor = AppTheme.colorScheme.primary,
                     shape = AppTheme.shape.container,
                     modifier = Modifier
                         .height(64.dp)

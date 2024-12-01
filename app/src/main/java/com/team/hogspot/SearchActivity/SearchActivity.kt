@@ -1,6 +1,7 @@
 package com.team.hogspot.SearchActivity
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Space
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,6 +20,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -94,6 +99,8 @@ fun SearchPage(
     navController: NavController? = null,
     userId: String
 ) {
+    var search by remember { mutableStateOf("Search...") }
+
     val searchResults = listOf(
         Hogspot(
             id = 1,
@@ -144,9 +151,12 @@ fun SearchPage(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Input(
-                type="Search",
-                placeholder="Search Hogspot",
                 iconId = R.drawable.search_icon,
+                value = search,
+                onValueChange = {
+                    search = it
+                    Log.d("SearchActivity", "updated search: $search")
+                }
             )
             Spacer(modifier = Modifier.height(32.dp))
             // map search results

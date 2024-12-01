@@ -1,6 +1,7 @@
 package com.team.hogspot.LoginActivity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -113,10 +114,10 @@ fun SignUpForm(
     onNavigate: (String) -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
-    var email by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("Email...") }
+    var username by remember { mutableStateOf("Username...") }
+    var password by remember { mutableStateOf("Password...") }
+    var confirmPassword by remember { mutableStateOf("Confirm Password...") }
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -135,29 +136,32 @@ fun SignUpForm(
 
         Spacer(modifier = Modifier.height(32.dp))
         Input(
-            type = "email",
-            placeholder = "Email...",
+            value = email,
+            onValueChange = { email = it },
             shape = AppTheme.shape.containerRoundedTop,
             iconId = -1,
             size = InputSize.XS
         )
         Input(
-            type = "username",
-            placeholder = "Username...",
+            value = username,
+            onValueChange = { username = it},
             shape = AppTheme.shape.containerRoundedNone,
             iconId = -1,
             size = InputSize.XS
         )
         Input(
-            type = "password",
-            placeholder = "Password...",
+            value = password,
+            onValueChange = { password = it},
             shape = AppTheme.shape.containerRoundedNone,
             iconId = -1,
             size = InputSize.XS
         )
         Input(
-            type = "confirmPassword",
-            placeholder = "Confirm Password...",
+            value = confirmPassword,
+            onValueChange = {
+                confirmPassword = it
+                Log.d("SignUpActivity", "updated confirmPassword: $confirmPassword")
+            },
             shape = AppTheme.shape.containerRoundedBottom,
             iconId = -1,
             size = InputSize.XS

@@ -91,4 +91,6 @@ dependencies {
     // GoogleMaps
     implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
+    // Coil
+    implementation(libs.coil.compose)
 }

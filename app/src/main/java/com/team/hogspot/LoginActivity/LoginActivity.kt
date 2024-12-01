@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +27,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.team.hogspot.Navigation.Screen
+import com.team.hogspot.R
+import com.team.hogspot.composables.H1
+import com.team.hogspot.composables.H3
+import com.team.hogspot.composables.Header
+import com.team.hogspot.composables.Input
+import com.team.hogspot.composables.InputSize
+import com.team.hogspot.composables.PrimaryButton
+import com.team.hogspot.composables.SecondaryButton
+import com.team.hogspot.ui.theme.AppTheme
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +43,7 @@ class LoginActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent{
-            MyLoginApplicationTheme {
+            AppTheme {
                 LoginForm(
                     onBackClick = {  },
                     onLogin = { username, password ->
@@ -62,8 +72,15 @@ fun MyLoginApplicationTheme(content: @Composable () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun LoginFormPreview() {
-    MyLoginApplicationTheme {
-        // LoginForm(onBackClick = {})
+    AppTheme {
+         LoginForm(
+             onBackClick = {},
+             onLogin = { username, password ->
+                 val id = login(username, password)
+                 id.toString()
+             },
+             onNavigate = {}
+         )
     }
 }
 
@@ -100,62 +117,64 @@ fun LoginForm(
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize().padding(35.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(AppTheme.colorScheme.background)
+            .padding(AppTheme.size.large)
     ) {
-        TopAppBar(
-            title = { Text("Back", color = Color.White) },
-            navigationIcon = {
-                IconButton(onClick = { onBackClick() }) {
-                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF101820))
+        Header(
+            pageTitle = "Welcome back.",
+            showBackButton = true,
+            showUserProfile = false,
+            onBackClick = onBackClick,
         )
-        Text(text = "Login", style = MaterialTheme.typography.headlineMedium, color = Color.White)
-        Spacer(modifier = Modifier.height(16.dp))
-        TextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text("Username") },
-            modifier = Modifier.fillMaxWidth(),
-            colors =
-            textFieldColors(
-                unfocusedContainerColor= Color(0xFF101820),
-                focusedContainerColor = Color(0xFF1C2A3A),
-                focusedTextColor = Color.White,
-                focusedLabelColor = Color.White,
-                cursorColor = Color.White,
-                focusedIndicatorColor = Color.White
-            )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Input(
+            type = "username",
+            placeholder = "Username...",
+            shape = AppTheme.shape.containerRoundedTop,
+            iconId = -1,
+            size = InputSize.XS
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth(),
-            colors =
-            textFieldColors(
-                unfocusedContainerColor= Color(0xFF101820),
-                focusedContainerColor = Color(0xFF1C2A3A),
-                focusedTextColor = Color.White,
-                focusedLabelColor = Color.White,
-                cursorColor = Color.White,
-                focusedIndicatorColor = Color.White
-            )
+        Input(
+            type = "password",
+            placeholder = "Password...",
+            shape = AppTheme.shape.containerRoundedBottom,
+            iconId = -1,
+            size = InputSize.XS
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
+
+        Spacer(modifier = Modifier.height(64.dp))
+
+        PrimaryButton(
+            text = "LOGIN",
             onClick = {
                 val id = onLogin(username, password)
                 if (id != "-1")
                     onNavigate(id)
             },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFCC323E)),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Login")
-        }
+            shape = AppTheme.shape.container,
+            isActive = false,
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        H3(
+            text = "FORGOT PASSWORD",
+            color = AppTheme.colorScheme.primary,
+        )
+
+        Spacer(modifier = Modifier.height(128.dp))
+
+        SecondaryButton(
+            text = "Login With Google",
+            onClick = {},
+            iconId = R.drawable.google_icon,
+            shape = AppTheme.shape.container,
+            textColor = AppTheme.colorScheme.textPrimary,
+            horizontalArrangement = Arrangement.Start,
+        )
     }
 }

@@ -40,7 +40,7 @@ fun Header (
     pageTitle: String,
     showBackButton: Boolean = false,
     showUserProfile: Boolean = true,
-    username: String,
+    username: String = "",
     onUserClick: () -> Unit = {},
     onBackClick: () -> Unit = {},
 ) {

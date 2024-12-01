@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
@@ -21,7 +23,9 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults.textFieldColors
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -29,6 +33,12 @@ import com.team.hogspot.App
 import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.UserViewModel
 import com.team.hogspot.UserViewModelFactory
+import com.team.hogspot.composables.Header
+import com.team.hogspot.composables.Input
+import com.team.hogspot.composables.InputSize
+import com.team.hogspot.composables.P
+import com.team.hogspot.composables.PrimaryButton
+import com.team.hogspot.ui.theme.AppTheme
 
 class SignUpActivity : ComponentActivity() {
     private val userViewModel: UserViewModel by viewModels {
@@ -40,14 +50,15 @@ class SignUpActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent{
-            MyLoginApplicationTheme {
+            AppTheme {
                 SignUpForm(
                     onBackClick = { },
                     onSignUp = { email, username ->
                         val id = insertIntoDB(email, username)
                         id.toString()
                     },
-                    onNavigate = {  }
+                    onNavigate = {  },
+                    onNavigateToLogin = {  }
                 )
             }
         }
@@ -59,8 +70,16 @@ class SignUpActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun SignUpFormPreview() {
-    MyLoginApplicationTheme {
-        // SignUpForm()
+    AppTheme {
+         SignUpForm(
+            onBackClick = { },
+            onSignUp = { email, username ->
+                val id = insertIntoDB(email, username)
+                id.toString()
+            },
+            onNavigate = {  },
+            onNavigateToLogin = {  }
+         )
     }
 }
 
@@ -74,7 +93,8 @@ fun SignUpScreen(navController: NavController) {
         },
         onNavigate = { id ->
             navController.navigate(Screen.ExploreScreen.withArgs(id))
-        }
+        },
+        onNavigateToLogin = { navController.navigate(Screen.LoginScreen.route) }
     )
 }
 
@@ -90,7 +110,8 @@ fun insertIntoDB(email: String, username: String): String {
 fun SignUpForm(
     onBackClick: () -> Unit = {},
     onSignUp: (String, String) -> String,
-    onNavigate: (String) -> Unit
+    onNavigate: (String) -> Unit,
+    onNavigateToLogin: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
@@ -100,95 +121,77 @@ fun SignUpForm(
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize().padding(35.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(AppTheme.colorScheme.background)
+            .padding(35.dp)
     ) {
-        TopAppBar(
-            title = { Text("Back", color = Color.White) },
-            navigationIcon = {
-                IconButton(onClick = { onBackClick() }) {
-                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF101820))
+        Header(
+            pageTitle = "Sign up.",
+            showBackButton = true,
+            showUserProfile = false,
+            onBackClick = onBackClick,
         )
-        Text(text = "Sign Up", style = MaterialTheme.typography.headlineMedium, color = Color.White)
-        Spacer(modifier = Modifier.height(16.dp))
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth(),
-            colors =
-            textFieldColors(
-                unfocusedContainerColor= Color(0xFF101820),
-                focusedContainerColor = Color(0xFF1C2A3A),
-                focusedTextColor = Color.White,
-                focusedLabelColor = Color.White,
-                cursorColor = Color.White,
-                focusedIndicatorColor = Color.White
-            )
+
+        Spacer(modifier = Modifier.height(32.dp))
+        Input(
+            type = "email",
+            placeholder = "Email...",
+            shape = AppTheme.shape.containerRoundedTop,
+            iconId = -1,
+            size = InputSize.XS
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        TextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text("Username") },
-            modifier = Modifier.fillMaxWidth(),
-            colors =
-            textFieldColors(
-                unfocusedContainerColor= Color(0xFF101820),
-                focusedContainerColor = Color(0xFF1C2A3A),
-                focusedTextColor = Color.White,
-                focusedLabelColor = Color.White,
-                cursorColor = Color.White,
-                focusedIndicatorColor = Color.White
-            )
+        Input(
+            type = "username",
+            placeholder = "Username...",
+            shape = AppTheme.shape.containerRoundedNone,
+            iconId = -1,
+            size = InputSize.XS
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth(),
-            colors =
-            textFieldColors(
-                unfocusedContainerColor= Color(0xFF101820),
-                focusedContainerColor = Color(0xFF1C2A3A),
-                focusedTextColor = Color.White,
-                focusedLabelColor = Color.White,
-                cursorColor = Color.White,
-                focusedIndicatorColor = Color.White
-            )
+        Input(
+            type = "password",
+            placeholder = "Password...",
+            shape = AppTheme.shape.containerRoundedNone,
+            iconId = -1,
+            size = InputSize.XS
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        TextField(
-            value = confirmPassword,
-            onValueChange = { confirmPassword = it },
-            label = { Text("Confirm Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth(),
-            colors =
-            textFieldColors(
-                unfocusedContainerColor= Color(0xFF101820),
-                focusedContainerColor = Color(0xFF1C2A3A),
-                focusedTextColor = Color.White,
-                focusedLabelColor = Color.White,
-                cursorColor = Color.White,
-                focusedIndicatorColor = Color.White
-            )
+        Input(
+            type = "confirmPassword",
+            placeholder = "Confirm Password...",
+            shape = AppTheme.shape.containerRoundedBottom,
+            iconId = -1,
+            size = InputSize.XS
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
+        Spacer(modifier = Modifier.height(64.dp))
+        PrimaryButton(
+            text = "SIGN UP",
             onClick = {
                 val id: String = onSignUp(email, username)
                 if (id != "-1")
                     onNavigate(id)
-          },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF325E25)),
+            },
+            shape = AppTheme.shape.container,
+            isActive = false,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row (
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Sign Up")
+            Box(
+                modifier = Modifier.clickable { onNavigateToLogin() },
+                contentAlignment = Alignment.Center
+            ) {
+                P(
+                    text = "Already have an account? Login",
+                    color = AppTheme.colorScheme.textSecondary,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+
         }
     }
 }

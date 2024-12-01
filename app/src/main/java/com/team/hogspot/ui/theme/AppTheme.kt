@@ -107,6 +107,7 @@ private val shape = AppShape(
         bottomStart = 16.dp,
         bottomEnd = 16.dp
     ),
+    containerRoundedNone = RoundedCornerShape(0.dp),
     tag = RoundedCornerShape(12.dp),
 
 )

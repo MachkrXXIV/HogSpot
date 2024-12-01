@@ -68,41 +68,57 @@ fun LandingScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF101820)) // Dark background color
+            .background(AppTheme.colorScheme.background) // Dark background color
+            .padding(horizontal = 32.dp),
+        contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(32.dp),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.app_logo),
-                contentDescription = "Icon",
-                modifier = Modifier.size(120.dp)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
             H1(
-                text = "HogSpot"
+                text=""
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            H3(
-                text = "UARK geogussr.",
-                color = AppTheme.colorScheme.textSecondary
-            )
-            Spacer(modifier = Modifier.height(200.dp))
-            PrimaryButton(
-                onClick={navController.navigate(Screen.SignupScreen.route)},
-                text="get started!",
-                modifier=Modifier
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            SecondaryButton(
-                onClick={navController.navigate(Screen.LoginScreen.route)},
-                text="log in",
-                modifier=Modifier
-            )
+            Column (
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.app_logo),
+                    contentDescription = "Icon",
+                    modifier = Modifier.size(150.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                H1(
+                    text = "HogSpot"
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                H3(
+                    text = "UARK geogussr.",
+                    color = AppTheme.colorScheme.textSecondary
+                )
+            }
+
+
+            Column (
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Bottom,
+                modifier = Modifier.padding(bottom = 32.dp)
+            ) {
+                PrimaryButton(
+                    onClick={navController.navigate(Screen.SignupScreen.route)},
+                    text="get started!",
+                    shape = AppTheme.shape.container
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                SecondaryButton(
+                    onClick={navController.navigate(Screen.LoginScreen.route)},
+                    text="log in",
+                    shape = AppTheme.shape.container
+                )
+            }
         }
     }
 }

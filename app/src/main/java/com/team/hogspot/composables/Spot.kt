@@ -94,6 +94,7 @@ private fun SpotPreview() {
                             imgFilePath = "img1.jpg",
                             difficulty = Difficulty.EASY,
                             hint = "This is a hint for HogSpot 1",
+                            rating = 3.0,
 
                         ),
                         GeoSpot(
@@ -107,6 +108,7 @@ private fun SpotPreview() {
                             imgFilePath = "img2.jpg",
                             difficulty = Difficulty.MEDIUM,
                             hint = "This is a hint for HogSpot 2",
+                            rating = 4.0,
                         ),
                     )
                 )

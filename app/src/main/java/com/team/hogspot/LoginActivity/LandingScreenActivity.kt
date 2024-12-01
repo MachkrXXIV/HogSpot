@@ -38,7 +38,7 @@ class LandingScreenActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent{
-            MyLoginApplicationTheme {
+            AppTheme {
                 Navigation()
             }
         }

@@ -48,7 +48,7 @@ fun DetailedSpotScreen(
         userId = id,
         onPlayClick = { spotId -> // TODO: implement PlayScreen and route
             Log.d("DetailedSpotScreen", "Play button clicked for spot $spotId")
-            // navController.navigate(Screen.PlayScreen.route + "/$spotId")
+             navController.navigate(Screen.PlayScreen.route + "/$spotId")
         },
         onUserClick = {
             navController.navigate(Screen.UserScreen.withArgs(id))

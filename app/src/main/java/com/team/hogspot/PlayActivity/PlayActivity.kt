@@ -53,6 +53,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -64,6 +66,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.R
 import com.team.hogspot.UserActivity.UserActivity
 import com.team.hogspot.composables.H1
@@ -117,7 +120,8 @@ class PlayActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AppTheme {
-                PlayPage(currentLocation = currentLocationState.value)
+//                PlayPage(currentLocation = currentLocationState.value)
+                PlayScreen(currentLocation = currentLocationState.value)
             }
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -178,6 +182,15 @@ class PlayActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun PlayScreen(
+    currentLocation: LatLng?,
+) {
+    PlayPage(
+        currentLocation = currentLocation,
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun PlayPagePreview() {
@@ -203,7 +216,7 @@ fun ResultPopupPreviewFail() {
 }
 
 @Composable
-fun PlayPage(currentLocation: LatLng?) {
+fun PlayPage(currentLocation: LatLng?, navController: NavController? = null) {
     var geospot = LatLng(36.06879351237508, -94.17486855593883)
     var currentView by remember { mutableStateOf(View.MAP) }
     var endClickCount by remember { mutableIntStateOf(0) }
@@ -226,13 +239,13 @@ fun PlayPage(currentLocation: LatLng?) {
     }
 
     fun onEnd() {
-        if (endClickCount == 0) {
-            distance = calculateDistance()
-        }
-        else if (endClickCount == 1) {
-            // TODO: popup
-        }
+        distance = calculateDistance()
         endClickCount++
+    }
+
+    fun onFinish() {
+        Log.d("PlayActivity", "Finished")
+        navController?.navigate(Screen.UserScreen.withArgs("1"))
     }
 
     fun onSwitchView() {
@@ -379,7 +392,7 @@ fun InfoView(
             text = "get hint",
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth(0.3f)
+                .fillMaxWidth(0.5f)
                 .align(Alignment.CenterHorizontally)
         )
         if (showHint) {
@@ -391,14 +404,14 @@ fun InfoView(
 
 @Composable
 fun ResultPopup(
-    distance: Float
+    distance: Float,
 ) {
     val localContext = LocalContext.current
     fun onFinish() {
         val intent = Intent(localContext, UserActivity::class.java)
         localContext.startActivity(intent)
     }
-   Dialog({onFinish()}) {
+   Dialog(onDismissRequest = { onFinish() }) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -416,7 +429,9 @@ fun ResultPopup(
                         imageVector = Icons.Filled.CheckCircle,
                         contentDescription = "HogSpot",
                         tint = AppTheme.colorScheme.difficultyEasy,
-                        modifier = Modifier.size(40.dp).padding(start = 16.dp)
+                        modifier = Modifier
+                            .size(40.dp)
+                            .padding(start = 16.dp)
                     )
                 } else {
                     H2(
@@ -426,7 +441,9 @@ fun ResultPopup(
                         imageVector = Icons.Filled.Close,
                         contentDescription = "HogSpot",
                         tint = AppTheme.colorScheme.difficultyHard,
-                        modifier = Modifier.size(40.dp).padding(start = 16.dp)
+                        modifier = Modifier
+                            .size(40.dp)
+                            .padding(start = 16.dp)
                     )
                 }
             }

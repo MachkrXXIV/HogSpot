@@ -1,5 +1,6 @@
 package com.team.hogspot.Navigation
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -30,6 +32,8 @@ import com.team.hogspot.LoginActivity.LandingScreen
 import com.team.hogspot.LoginActivity.LoginScreen
 import com.team.hogspot.LoginActivity.SignUpScreen
 import com.team.hogspot.NewSpotActivity.NewSpotScreen
+import com.team.hogspot.PlayActivity.PlayActivity
+import com.team.hogspot.PlayActivity.PlayScreen
 import com.team.hogspot.SearchActivity.SearchScreen
 import com.team.hogspot.UserActivity.UserScreen
 import com.team.hogspot.composables.H1
@@ -38,10 +42,10 @@ import com.team.hogspot.ui.theme.AppTheme
 
 
 @Composable
-fun Navigation() {
+fun Navigation(startDestination: String = Screen.LandingScreen.route) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Screen.LandingScreen.route) {
+    NavHost(navController = navController, startDestination = startDestination) {
         // Add destinations here
         composable(route = Screen.LandingScreen.route) {
             LandingScreen(navController)
@@ -108,6 +112,13 @@ fun Navigation() {
             entry.arguments?.getString("id")?.let { DetailedSpotScreen(it, navController) }
         }
 
+        composable(
+            route = Screen.PlayScreen.route + "/{id}"
+        ) {
+            val context = LocalContext.current
+            val intent = Intent(context, PlayActivity::class.java)
+            context.startActivity(intent)
+        }
 
     }
 }

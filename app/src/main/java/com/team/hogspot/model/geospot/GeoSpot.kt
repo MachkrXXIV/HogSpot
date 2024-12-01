@@ -28,4 +28,5 @@ data class GeoSpot(
     @ColumnInfo(name = "latitude") var latitude: Double,
     @ColumnInfo(name = "longitude") val longitude: Double,
     @ColumnInfo(name = "creationDate") val creationDate: LocalDateTime,
+    @ColumnInfo(name = "rating") var rating: Double,
 )

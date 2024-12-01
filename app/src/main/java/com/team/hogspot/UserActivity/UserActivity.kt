@@ -20,9 +20,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.team.hogspot.Navigation.Navigation
 import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.R
-import com.team.hogspot.composables.Difficulty
+import com.team.hogspot.model.geospot.Difficulty
 import com.team.hogspot.composables.H2
 import com.team.hogspot.composables.Header
 import com.team.hogspot.composables.Hogspot
@@ -31,17 +32,21 @@ import com.team.hogspot.composables.SecondaryButton
 import com.team.hogspot.composables.SpotCarousel
 import com.team.hogspot.composables.UserHeader
 import com.team.hogspot.composables.UserInfoCards
-import com.team.hogspot.composables.UserTemp
+import com.team.hogspot.model.geospot.GeoSpot
+import com.team.hogspot.model.user.User
 import com.team.hogspot.ui.theme.AppTheme
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class UserActivity : ComponentActivity() {
     override fun onCreate(savedInstancesBundle: Bundle?) {
         super.onCreate(savedInstancesBundle)
         enableEdgeToEdge()
-
         setContent {
             AppTheme {
-                //
+                UserPage(
+                    userId = "1"
+                )
             }
         }
     }
@@ -79,76 +84,60 @@ fun UserPage(
     navController: NavController? = null
 ) {
 
-    val user = UserTemp(
-        id = 1,
-        username = "Jordi Castro",
+    val user = User(
+        userId = 1,
+        userName = "Jordi Castro",
         email = "jordi@gmail.com",
-        dateJoined = "10/12/24",
+        dateJoined = LocalDateTime.now(),
         streak = 5,
         numSpots = 3,
-        spots = listOf(
-            Hogspot(
-                id = 1,
-                title = "Title1",
-                description = "Description1",
-                location = "Location1",
-                date = "12.2.2024",
-                imageUrls = "ImageUrls1",
-                rating = 3.0f,
-                difficulty = Difficulty.EASY
-            ),
-            Hogspot(
-                id = 2,
-                title = "Title2",
-                description = "Description2",
-                location = "Location2",
-                date = "12.2.2024",
-                imageUrls = "ImageUrls2",
-                rating = 4.0f,
-                difficulty = Difficulty.MEDIUM
-            ),
-            Hogspot(
-                id = 3,
-                title = "Title3",
-                description = "Description3",
-                location = "Location3",
-                date = "12.2.2024",
-                imageUrls = "ImageUrls3",
-                rating = 5.0f,
-                difficulty = Difficulty.HARD
-            )
-        ),
         friends = listOf(
-            UserTemp(
-                id = 1,
-                username = "Bob",
-                email = "bob@gmail.com",
-                dateJoined = "10/12/24",
-                streak = 4,
-                numSpots = 2,
-                spots = listOf(),
-                friends = listOf()
-                ),
-            UserTemp(
-                id = 2,
-                username = "Kevin",
-                email = "kevin@gmail.com",
-                dateJoined = "10/12/24",
-                streak = 0,
-                numSpots = 1,
-                spots = listOf(),
-                friends = listOf()
-            ),
-            UserTemp(
-                id = 1,
-                username = "Stuart",
-                email = "stuart@gmail.com",
-                dateJoined = "10/12/2024",
-                streak = 17,
-                numSpots = 14,
-                spots = listOf(),
-                friends = listOf()
-            ),
+        )
+    )
+
+    val friends = mutableListOf<User>(
+        User(
+            userId = 1,
+            userName = "Bob",
+            email = "bob@gmail.com",
+            dateJoined = LocalDateTime.now(),
+            streak = 4,
+            numSpots = 2,
+            friends = listOf()
+        ),
+        User(
+            userId = 2,
+            userName = "Kevin",
+            email = "kevin@gmail.com",
+            dateJoined = LocalDateTime.now(),
+            streak = 0,
+            numSpots = 1,
+            friends = listOf()
+        ),
+        User(
+            userId = 1,
+            userName = "Stuart",
+            email = "stuart@gmail.com",
+            dateJoined = LocalDateTime.now(),
+            streak = 17,
+            numSpots = 14,
+            friends = listOf()
+        ),
+    )
+
+    val spots = mutableListOf<GeoSpot>(
+        GeoSpot(
+            geoSpotId = 1,
+            creatorId = 1,
+            name = "Title1",
+            description = "Description1",
+            imgFilePath = "ImageUrls1",
+            hint = "Hint1",
+            latitude = 1.0,
+            longitude = 1.0,
+            creationDate = LocalDateTime.now(),
+            rating = 3.0,
+            difficulty = Difficulty.EASY
         )
     )
 
@@ -176,8 +165,8 @@ fun UserPage(
                     .verticalScroll(rememberScrollState())
             ) {
                 UserHeader(
-                    username = user.username,
-                    dateJoined = user.dateJoined
+                    username = user.userName,
+                    dateJoined = user.dateJoined.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")).toString()
                 )
 
                 Spacer(modifier = Modifier.height(36.dp))
@@ -194,9 +183,9 @@ fun UserPage(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 SpotCarousel(
-                    spots = user.spots,
-                    onSpotClick = { hogspot ->
-                        navController?.navigate(Screen.DetailedSpotScreen.withArgs(hogspot.id.toString()))
+                    spots = spots,
+                    onSpotClick = { spot ->
+                        navController?.navigate(Screen.DetailedSpotScreen.withArgs(spot.geoSpotId.toString()))
                     }
                 )
 

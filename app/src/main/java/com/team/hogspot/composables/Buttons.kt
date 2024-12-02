@@ -6,6 +6,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -35,15 +36,27 @@ fun PrimaryButton(
     text: String,
     iconId: Int? = null,
     shape: Shape = AppTheme.shape.button,
+    isActive: Boolean = true,
     modifier: Modifier = Modifier
 ) {
+    val buttonColor = if (isActive) {
+        AppTheme.colorScheme.primary
+    } else {
+        AppTheme.colorScheme.textTertiary
+    }
+
+    val textColor = if (isActive) {
+        AppTheme.colorScheme.background
+    } else {
+        AppTheme.colorScheme.backgroundSecondary
+    }
     Button(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = AppTheme.colorScheme.primary // Button background color
+            containerColor = buttonColor // Button background color
         ),
         shape = shape
     ) {
@@ -65,7 +78,7 @@ fun PrimaryButton(
 
             Text(
                 text = text,
-                color = AppTheme.colorScheme.background,
+                color = textColor,
                 style = AppTheme.typography.labelNormal
             )
         }
@@ -79,8 +92,23 @@ fun SecondaryButton(
     text: String,
     iconId: Int? = null,
     shape: Shape = AppTheme.shape.button,
+    textColor: Color = AppTheme.colorScheme.primary,
+    iconColor: Color? = null,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
     modifier: Modifier = Modifier
 ) {
+    val iconTint = if (iconColor == null ) {
+        Color.Unspecified
+    } else {
+        iconColor
+    }
+
+    val spacerDp = if (horizontalArrangement == Arrangement.Center) {
+        12.dp
+    } else {
+        78.dp
+    }
+
     OutlinedButton(
         onClick = onClick,
         shape = shape,
@@ -94,7 +122,8 @@ fun SecondaryButton(
     ) {
         Row (
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = horizontalArrangement,
+            modifier = Modifier.fillMaxWidth()
 
         ) {
             if (iconId != null) {
@@ -104,13 +133,15 @@ fun SecondaryButton(
                     modifier = Modifier
                         .width(20.dp)
                         .height(20.dp),
-                    tint = AppTheme.colorScheme.primary
+                    tint = iconColor ?: Color.Unspecified
                 )
             }
+            
+            Spacer(modifier = Modifier.width(spacerDp))
 
             Text(
                 text = text,
-                color = AppTheme.colorScheme.primary,
+                color = textColor,
                 style = AppTheme.typography.labelNormal
             )
         }
@@ -153,7 +184,8 @@ private fun PreviewButtons() {
                 iconId = R.drawable.plus_icon,
                 modifier = Modifier
                     .height(64.dp),
-                shape = AppTheme.shape.container
+                shape = AppTheme.shape.container,
+                iconColor = AppTheme.colorScheme.primary
             )
 
             SecondaryButton(
@@ -162,7 +194,8 @@ private fun PreviewButtons() {
                 iconId = R.drawable.down_arrow_icon,
                 modifier = Modifier
                     .height(128.dp),
-                shape = AppTheme.shape.container
+                shape = AppTheme.shape.container,
+                iconColor = AppTheme.colorScheme.primary
             )
         }
     }

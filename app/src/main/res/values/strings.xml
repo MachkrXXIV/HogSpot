@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HogSpot</string>
+    <string name="google_maps_api_key">AIzaSyCIvNPvwyx65NXVByf2eBM1HMPj3hNF-s4</string>
 </resources>

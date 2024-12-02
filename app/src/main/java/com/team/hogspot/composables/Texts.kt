@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.team.hogspot.ui.theme.AppTheme
@@ -63,14 +64,16 @@ fun P (
     text: String,
     color: Color = AppTheme.colorScheme.textPrimary,
     modifier: Modifier = Modifier,
-    textAlignment: TextAlign = TextAlign.Start
+    textAlignment: TextAlign = TextAlign.Start,
+    fontWeight: FontWeight = FontWeight.Normal
 ) {
     Text(
         text = text,
         color = color,
         style = AppTheme.typography.p,
         modifier = modifier,
-        textAlign = textAlignment
+        textAlign = textAlignment,
+        fontWeight = fontWeight,
     )
 }
 

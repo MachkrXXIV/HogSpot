@@ -37,6 +37,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {
@@ -45,6 +46,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
     val composeBom = platform("androidx.compose:compose-bom:2024.09.03")
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -85,4 +88,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.common.java8)
     // GSON
     implementation(libs.gson)
+    // GoogleMaps
+    implementation(libs.play.services.maps)
+    implementation(libs.maps.compose)
 }

@@ -1,11 +1,13 @@
 package com.team.hogspot.NewSpotActivity
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,10 +24,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.team.hogspot.Navigation.Screen
+import coil.compose.AsyncImage
 import com.team.hogspot.R
 import com.team.hogspot.composables.H2
 import com.team.hogspot.composables.Header
@@ -39,7 +42,6 @@ import com.team.hogspot.composables.SelectDifficulty
 import com.team.hogspot.ui.theme.AppTheme
 
 
-
 class NewSpotActivity : ComponentActivity() {
     override fun onCreate(savedInstancesBundle: Bundle?) {
         super.onCreate(savedInstancesBundle)
@@ -49,7 +51,6 @@ class NewSpotActivity : ComponentActivity() {
             AppTheme {
                 NewSpotPage(
                     onBackClick = {},
-                    onImageClick = {},
                     onSubmit = {}
                 )
             }
@@ -64,7 +65,6 @@ fun NewSpotPreview() {
     AppTheme {
         NewSpotPage(
             onBackClick = {},
-            onImageClick = {},
             onSubmit = {}
         )
     }
@@ -74,12 +74,20 @@ fun NewSpotPreview() {
 fun NewSpotScreen(
     navController: NavController
 ) {
+//    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+//    val imagePickerLauncher = rememberLauncherForActivityResult(
+//        contract = ActivityResultContracts.GetContent(),
+//        onResult = { uri ->
+//            selectedImageUri = uri
+//        }
+//    )
+//
+//    fun onImageClick() {
+//        imagePickerLauncher.launch("image/*")
+//    }
     NewSpotPage(
         onBackClick = {
             navController.popBackStack()
-        },
-        onImageClick = { // TODO: Launch image gallery / picker
-            Log.d("NewSpotActivity", "Image clicked")
         },
         onSubmit = {
             Log.d("NewSpotActivity", "Submit clicked")
@@ -94,13 +102,22 @@ fun NewSpotScreen(
 @Composable
 fun NewSpotPage(
     onBackClick: () -> Unit,
-    onImageClick: () -> Unit,
     onSubmit: () -> Unit // TODO: (formDataObject) -> Unit
 ) {
     var title by remember { mutableStateOf("Title...") }
     var description by remember { mutableStateOf("Description...") }
     var location by remember { mutableStateOf("location...") }
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            selectedImageUri = uri
+        }
+    )
 
+    fun onImageClick() {
+        imagePickerLauncher.launch("image/*")
+    }
 
     Box(
         modifier = Modifier
@@ -123,7 +140,7 @@ fun NewSpotPage(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Column (
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(670.dp)
@@ -186,13 +203,24 @@ fun NewSpotPage(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SecondaryButton(
-                    onClick=onImageClick,
-                    text="Image",
-                    iconId=R.drawable.plus_icon,
-                    shape=AppTheme.shape.container,
+                    onClick = { onImageClick() },
+                    text = "Image",
+                    iconId = R.drawable.plus_icon,
+                    shape = AppTheme.shape.container,
                     iconColor = AppTheme.colorScheme.primary,
-                    modifier=Modifier
+                    modifier = Modifier
                         .height(128.dp)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                AsyncImage(
+                    model = selectedImageUri,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .height(128.dp)
+                        .clip(AppTheme.shape.container)
+                        .padding(4.dp)
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -202,7 +230,7 @@ fun NewSpotPage(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 SelectDifficulty(
-                    onSelection={ difficulty ->
+                    onSelection = { difficulty ->
                         Log.d("NewSpotActivity", "Selected difficulty: $difficulty")
                     }
                 )
@@ -210,10 +238,10 @@ fun NewSpotPage(
                 Spacer(modifier = Modifier.height(36.dp))
 
                 PrimaryButton(
-                    onClick=onSubmit,
-                    text="Create HogSpot",
-                    shape=AppTheme.shape.container,
-                    modifier=Modifier
+                    onClick = onSubmit,
+                    text = "Create HogSpot",
+                    shape = AppTheme.shape.container,
+                    modifier = Modifier
                         .height(64.dp)
                 )
 

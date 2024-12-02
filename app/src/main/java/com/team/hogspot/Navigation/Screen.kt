@@ -9,7 +9,7 @@ sealed class Screen(val route: String) {
     object SearchScreen : Screen("search_screen")
     object UserScreen : Screen("user_screen")
     object DetailedSpotScreen : Screen("detailed_spot_screen")
-    object NewSpotScreen : Screen("add_spot_screen")
+    object NewSpotScreen : Screen("new_spot_screen")
 
     object PlayScreen : Screen("play_screen")
     object PlayDetailScreen : Screen("play_detail_screen")

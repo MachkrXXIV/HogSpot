@@ -24,12 +24,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.team.hogspot.R
+import com.team.hogspot.model.geospot.Difficulty
+import com.team.hogspot.model.geospot.GeoSpot
 import com.team.hogspot.ui.theme.AppTheme
 import com.team.hogspot.ui.theme.blue500
+import java.time.LocalDateTime
 
 
 data class Hogspot(
@@ -39,22 +43,26 @@ data class Hogspot(
     val location: String,
     val date: String,
     val imageUrls: String,
-    val rating: Float,
+    val rating: Double,
     val difficulty: Difficulty
 )
 
-enum class Difficulty {
-    EASY,
-    MEDIUM,
-    HARD
-}
-
-
 @Composable
 fun SearchItem(
-    hogspot: Hogspot,
+    geospot: GeoSpot,
     onClick: () -> Unit
 ) {
+    val formattedDate = formatSpotDate(geospot.creationDate)
+
+    val imageId = when (geospot.imgFilePath) {
+        "spot_image1" -> R.drawable.spot_image1
+        "spot_image2" -> R.drawable.spot_image2
+        "spot_image3" -> R.drawable.spot_image3
+        "spot_image4" -> R.drawable.spot_image4
+        "spot_image5" -> R.drawable.spot_image5
+        else -> R.drawable.spot_image1
+    }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -77,9 +85,14 @@ fun SearchItem(
             ) {
                 // Image
                 Image(
-                    painter = painterResource(id = R.drawable.map_icon),
-                    contentDescription = "Map Icon",
-                    modifier = Modifier.size(40.dp)
+                    painter = painterResource(id = imageId),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .width(40.dp)
+                        .height(40.dp)
+                        .clip(AppTheme.shape.containerSmall)
+                        .fillMaxWidth(),
+                    contentScale = ContentScale.Crop
                 )
 
                 // Title and Date
@@ -90,22 +103,22 @@ fun SearchItem(
                         .fillMaxHeight()
                 ) {
                     P(
-                        text = hogspot.title
+                        text = geospot.name
                     )
                     LabelSmall(
-                        text = hogspot.date,
+                        text = formattedDate,
                         color = AppTheme.colorScheme.textSecondary
                     )
                 }
 
                 // Difficulty
                 DifficultyTag(
-                    difficulty = hogspot.difficulty
+                    difficulty = geospot.difficulty
                 )
 
                 // Star rating
                 StarRating(
-                    rating = hogspot.rating
+                    rating = geospot.rating
                 )
             }
 
@@ -117,6 +130,15 @@ fun SearchItem(
             )
         }
     }
+}
+
+fun formatSpotDate(date: LocalDateTime): String {
+    // date format: "YYYY-MM-DDThh:mm:ss"
+    // format to "MM.DD.YYYY"
+    val month = date.monthValue.toString().padStart(2, '0')
+    val day = date.dayOfMonth.toString().padStart(2, '0')
+    val year = date.year.toString()
+    return "$month.$day.$year"
 }
 
 @Composable
@@ -163,7 +185,7 @@ fun DifficultyTag(
 }
 
 @Composable
-fun StarRating(rating: Float, size: DifficultyAndRatingSize = DifficultyAndRatingSize.SM) {
+fun StarRating(rating: Double, size: DifficultyAndRatingSize = DifficultyAndRatingSize.SM) {
     val starSize = when (size) {
         DifficultyAndRatingSize.XS -> 14.dp
         DifficultyAndRatingSize.SM -> 16.dp
@@ -229,38 +251,72 @@ fun SelectDifficulty (
 @Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 private fun PreviewPrimaryButton() {
-    val hogspot = Hogspot(
-        id = 1,
-        title = "Title1",
+    val geospot1 = GeoSpot(
+        geoSpotId = 1,
+        creatorId = 1,
+        name = "Title1",
+        imgFilePath = "spot_image1",
         description = "Description1",
-        location = "Location1",
-        date = "12.2.2024",
-        imageUrls = "ImageUrls1",
-        rating = 3.0f,
-        difficulty = Difficulty.EASY
+        difficulty = Difficulty.EASY,
+        hint = "hint1",
+        latitude = 1.0,
+        longitude = 1.0,
+        creationDate = LocalDateTime.of(2024, 12, 2, 10, 10),
+        rating = 5.0
     )
-
-    val hogspot2 = Hogspot(
-        id = 2,
-        title = "Title2",
+    val geospot2 = GeoSpot(
+        geoSpotId = 2,
+        creatorId = 1,
+        name = "Title2",
+        imgFilePath = "spot_image2",
         description = "Description2",
-        location = "Location2",
-        date = "12.2.2024",
-        imageUrls = "ImageUrls2",
-        rating = 4.0f,
-        difficulty = Difficulty.MEDIUM
+        difficulty = Difficulty.MEDIUM,
+        hint = "hint2",
+        latitude = 1.0,
+        longitude = 1.0,
+        creationDate = LocalDateTime.of(2024, 4, 18, 12, 33),
+        rating = 4.0
+    )
+    val geospot3 = GeoSpot(
+        geoSpotId = 3,
+        creatorId = 1,
+        name = "Title3",
+        imgFilePath = "spot_image3",
+        description = "Description3",
+        difficulty = Difficulty.HARD,
+        hint = "hint3",
+        latitude = 1.0,
+        longitude = 1.0,
+        creationDate = LocalDateTime.of(2024, 9, 21, 23, 11),
+        rating = 3.0
+    )
+    val geospot4 = GeoSpot(
+        geoSpotId = 4,
+        creatorId = 1,
+        name = "Title4",
+        imgFilePath = "spot_image4",
+        description = "Description4",
+        difficulty = Difficulty.EASY,
+        hint = "hint4",
+        latitude = 1.0,
+        longitude = 1.0,
+        creationDate = LocalDateTime.of(2024, 6, 22, 4, 47),
+        rating = 4.0
+    )
+    val geospot5 = GeoSpot(
+        geoSpotId = 5,
+        creatorId = 1,
+        name = "Title5",
+        imgFilePath = "spot_image5",
+        description = "Description5",
+        difficulty = Difficulty.MEDIUM,
+        hint = "hint5",
+        latitude = 1.0,
+        longitude = 1.0,
+        creationDate = LocalDateTime.of(2024, 3, 15, 15, 22),
+        rating = 5.0
     )
 
-    val hogspot3 = Hogspot(
-        id = 3,
-        title = "Title3",
-        description = "Description3",
-        location = "Location3",
-        date = "12.2.2024",
-        imageUrls = "ImageUrls3",
-        rating = 5.0f,
-        difficulty = Difficulty.HARD
-    )
     AppTheme {
         Column(
             modifier = Modifier
@@ -271,15 +327,15 @@ private fun PreviewPrimaryButton() {
             verticalArrangement = Arrangement.spacedBy(AppTheme.size.normal)
         ) {
             SearchItem(
-                hogspot = hogspot,
+                geospot = geospot1,
                 onClick = {}
             )
             SearchItem(
-                hogspot = hogspot2,
+                geospot = geospot2,
                 onClick = {}
             )
             SearchItem(
-                hogspot = hogspot3,
+                geospot = geospot3,
                 onClick = {}
             )
 
@@ -289,13 +345,13 @@ private fun PreviewPrimaryButton() {
 
             DifficultyAndRating(
                 difficulty = Difficulty.MEDIUM,
-                rating = 3.0f,
+                rating = 3.0,
                 size = DifficultyAndRatingSize.SM
             )
 
             DifficultyAndRating(
                 difficulty = Difficulty.MEDIUM,
-                rating = 3.0f,
+                rating = 3.0,
                 size = DifficultyAndRatingSize.XS
             )
         }

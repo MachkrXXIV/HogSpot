@@ -2,25 +2,17 @@ package com.team.hogspot.Navigation
 
 import android.content.Intent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -33,10 +25,8 @@ import com.team.hogspot.LoginActivity.LoginScreen
 import com.team.hogspot.LoginActivity.SignUpScreen
 import com.team.hogspot.NewSpotActivity.NewSpotScreen
 import com.team.hogspot.PlayActivity.PlayActivity
-import com.team.hogspot.PlayActivity.PlayScreen
 import com.team.hogspot.SearchActivity.SearchScreen
 import com.team.hogspot.UserActivity.UserScreen
-import com.team.hogspot.composables.H1
 import com.team.hogspot.composables.Navbar
 import com.team.hogspot.ui.theme.AppTheme
 
@@ -84,20 +74,39 @@ fun Navigation(startDestination: String = Screen.LandingScreen.route) {
         }
 
         composable(
-            route = Screen.UserScreen.route + "/{id}",
+            route = Screen.UserScreen.route + "/{id}/{createdSpot}",
             arguments = listOf(
                 navArgument("id") {
                     type = NavType.StringType
                     nullable = false
+                },
+                navArgument("createdSpot") {
+                    type = NavType.StringType
+                    defaultValue = "false"
+                    nullable = true
                 }
             )
         ) { entry ->
-            entry.arguments?.getString("id")?.let { UserScreen(it, navController) }
+            entry.arguments?.getString("id")?.let {
+                UserScreen(
+                    it,
+                    entry.arguments?.getString("createdSpot") ?: "false",
+                    navController,
+                )
+            }
 
         }
 
-        composable(route = Screen.NewSpotScreen.route) {
-            NewSpotScreen(navController)
+        composable(
+            route = Screen.NewSpotScreen.route + "/{id}",
+            arguments = listOf(
+                navArgument("id") {
+                    type = NavType.StringType
+                    nullable = false
+                },
+            )
+        ) {
+            NewSpotScreen(it.arguments?.getString("id") ?: "", navController)
         }
 
         composable(
@@ -123,7 +132,7 @@ fun Navigation(startDestination: String = Screen.LandingScreen.route) {
     }
 }
 
-@Composable
+@Composable // TODO: remove this after integrating the explore screen
 fun ExploreScreen(id: String?, navController: NavController) {
     var text by remember { mutableStateOf("") }
 

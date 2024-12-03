@@ -1,7 +1,6 @@
 package com.team.hogspot.PlayActivity
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -19,7 +18,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -45,7 +43,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -54,7 +51,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -69,17 +65,18 @@ import com.google.maps.android.compose.rememberMarkerState
 import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.R
 import com.team.hogspot.UserActivity.UserActivity
-import com.team.hogspot.composables.H1
 import com.team.hogspot.composables.H2
 import com.team.hogspot.composables.H3
 import com.team.hogspot.composables.Header
 import com.team.hogspot.composables.P
 import com.team.hogspot.composables.PrimaryButton
 import com.team.hogspot.composables.SecondaryButton
+import com.team.hogspot.model.user.User
 import com.team.hogspot.ui.theme.AppTheme
 import com.team.hogspot.util.LocationUtilCallback
 import com.team.hogspot.util.createLocationCallback
 import com.team.hogspot.util.createLocationRequest
+import java.time.LocalDateTime
 
 class PlayActivity : ComponentActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -252,6 +249,16 @@ fun PlayPage(currentLocation: LatLng?, navController: NavController? = null) {
         currentView = if (currentView == View.MAP) View.INFO else View.MAP
     }
 
+    val user = User(
+        userId = 1,
+        userName = "Bob",
+        email = "bob@gmail.com",
+        dateJoined = LocalDateTime.now(),
+        streak = 4,
+        numSpots = 2,
+        friends = listOf()
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -262,7 +269,7 @@ fun PlayPage(currentLocation: LatLng?, navController: NavController? = null) {
         }
         Header(
             pageTitle = "Play",
-            username = "Jordi",
+            username = user.userName,
             showBackButton = true,
             showUserProfile = false,
         )
@@ -335,7 +342,7 @@ fun GoogleMapView(
         modifier = modifier
             .fillMaxWidth()
             .height(700.dp)
-            .background(color = androidx.compose.ui.graphics.Color.Gray),
+            .background(color = Color.Gray),
         cameraPositionState = cameraPositionState,
     ) {
         currentLocation.let {

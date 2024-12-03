@@ -35,18 +35,6 @@ import com.team.hogspot.ui.theme.AppTheme
 import com.team.hogspot.ui.theme.blue500
 import java.time.LocalDateTime
 
-
-data class Hogspot(
-    val id: Int,
-    val title: String,
-    val description: String,
-    val location: String,
-    val date: String,
-    val imageUrls: String,
-    val rating: Double,
-    val difficulty: Difficulty
-)
-
 @Composable
 fun SearchItem(
     geospot: GeoSpot,

@@ -1,7 +1,6 @@
 package com.team.hogspot.UserActivity
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -17,11 +16,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.R
 import com.team.hogspot.model.geospot.Difficulty
@@ -39,8 +36,8 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class UserActivity : ComponentActivity() {
-    override fun onCreate(savedInstancesBundle: Bundle?) {
-        super.onCreate(savedInstancesBundle)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             AppTheme {
@@ -50,8 +47,6 @@ class UserActivity : ComponentActivity() {
             }
         }
     }
-
-    // private fun
 }
 
 
@@ -88,20 +83,19 @@ fun UserPage(
 ) {
     val user = User(
         userId = 1,
-        userName = "Jordi Castro",
-        email = "jordi@gmail.com",
+        userName = "Bob",
+        email = "bob@gmail.com",
         dateJoined = LocalDateTime.now(),
-        streak = 3,
-        numSpots = 5,
-        friends = listOf(
-        )
+        streak = 4,
+        numSpots = 2,
+        friends = listOf()
     )
 
     val friends = mutableListOf<User>(
         User(
             userId = 1,
-            userName = "Bob",
-            email = "bob@gmail.com",
+            userName = "Gru",
+            email = "=gru@gmail.com",
             dateJoined = LocalDateTime.now(),
             streak = 4,
             numSpots = 2,
@@ -207,7 +201,7 @@ fun UserPage(
             ) {
             Header(
                 pageTitle = "User",
-                username = "Jordi",
+                username = user.userName,
                 showUserProfile = false,
             )
 

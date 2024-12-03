@@ -27,18 +27,18 @@ import androidx.navigation.NavController
 import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.R
 import com.team.hogspot.composables.Header
-import com.team.hogspot.composables.Hogspot
 import com.team.hogspot.composables.Input
 import com.team.hogspot.composables.Navbar
 import com.team.hogspot.composables.SearchItem
 import com.team.hogspot.model.geospot.Difficulty
 import com.team.hogspot.model.geospot.GeoSpot
+import com.team.hogspot.model.user.User
 import com.team.hogspot.ui.theme.AppTheme
 import java.time.LocalDateTime
 
 class SearchActivity : ComponentActivity() {
-    override fun onCreate(savedInstancesBundle: Bundle?) {
-        super.onCreate(savedInstancesBundle)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         setContent {
@@ -51,10 +51,6 @@ class SearchActivity : ComponentActivity() {
             }
         }
     }
-
-    // private fun
-
-
 }
 
 
@@ -168,6 +164,16 @@ fun SearchPage(
 
     )
 
+    val user = User(
+        userId = 1,
+        userName = "Bob",
+        email = "bob@gmail.com",
+        dateJoined = LocalDateTime.now(),
+        streak = 4,
+        numSpots = 2,
+        friends = listOf()
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -180,7 +186,7 @@ fun SearchPage(
             ) {
             Header(
                 pageTitle = "Search",
-                username = "Jordi",
+                username = user.userName,
                 onUserClick = onUserClick
             )
             Spacer(modifier = Modifier.height(16.dp))

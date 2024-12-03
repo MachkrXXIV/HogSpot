@@ -20,11 +20,11 @@ import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.composables.DetailedSpotCard
 import com.team.hogspot.composables.H2
 import com.team.hogspot.composables.Header
-import com.team.hogspot.composables.Hogspot
 import com.team.hogspot.composables.Navbar
 import com.team.hogspot.composables.SpotCarousel
 import com.team.hogspot.model.geospot.Difficulty
 import com.team.hogspot.model.geospot.GeoSpot
+import com.team.hogspot.model.user.User
 import com.team.hogspot.ui.theme.AppTheme
 import java.time.LocalDateTime
 
@@ -44,7 +44,7 @@ fun DetailedSpotScreen(
 ) {
     DetailedSpotPage(
         userId = id,
-        onPlayClick = { spotId -> // TODO: implement PlayScreen and route
+        onPlayClick = { spotId ->
             Log.d("DetailedSpotScreen", "Play button clicked for spot $spotId")
              navController.navigate(Screen.PlayScreen.route + "/$spotId")
         },
@@ -63,6 +63,16 @@ fun DetailedSpotPage (
     onPlayClick: (String) -> Unit = {},
     onUserClick: () -> Unit = {}
 ) {
+
+    val user = User(
+        userId = 1,
+        userName = "Bob",
+        email = "bob@gmail.com",
+        dateJoined = LocalDateTime.now(),
+        streak = 4,
+        numSpots = 2,
+        friends = listOf()
+    )
 
     val spots = listOf(
         GeoSpot(
@@ -137,7 +147,7 @@ fun DetailedSpotPage (
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppTheme.colorScheme.background) // Dark background color
+            .background(AppTheme.colorScheme.background)
             .padding(AppTheme.size.medium)
     ) {
         Column(
@@ -146,7 +156,7 @@ fun DetailedSpotPage (
             ) {
             Header(
                 pageTitle = "Spot",
-                username = "Jordi",
+                username = user.userName,
                 showBackButton = true,
                 onBackClick = {
                     navController?.popBackStack()

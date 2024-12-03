@@ -1,34 +1,23 @@
 package com.team.hogspot.Navigation
 
 import android.content.Intent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.team.hogspot.DetailedSpotActivity.DetailedSpotScreen
+import com.team.hogspot.ExploreActivity.ExploreScreen
 import com.team.hogspot.LoginActivity.LandingScreen
 import com.team.hogspot.LoginActivity.LoginScreen
 import com.team.hogspot.LoginActivity.SignUpScreen
 import com.team.hogspot.NewSpotActivity.NewSpotScreen
 import com.team.hogspot.PlayActivity.PlayActivity
+import com.team.hogspot.PlayActivity.PlayScreen
 import com.team.hogspot.SearchActivity.SearchScreen
 import com.team.hogspot.UserActivity.UserScreen
-import com.team.hogspot.composables.Navbar
-import com.team.hogspot.ui.theme.AppTheme
 
 
 @Composable
@@ -56,7 +45,7 @@ fun Navigation(startDestination: String = Screen.LandingScreen.route) {
                 }
             )
         ) { entry ->
-            ExploreScreen(entry.arguments?.getString("id"), navController)
+            entry.arguments?.getString("id")?.let { ExploreScreen(it, navController) }
 
         }
 
@@ -130,31 +119,5 @@ fun Navigation(startDestination: String = Screen.LandingScreen.route) {
         }
 
     }
-}
-
-@Composable // TODO: remove this after integrating the explore screen
-fun ExploreScreen(id: String?, navController: NavController) {
-    var text by remember { mutableStateOf("") }
-
-    Column (
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AppTheme.colorScheme.background)
-            .padding(AppTheme.size.medium)
-    ) {
-        Text("Explore Screen, id: $id")
-
-        if (id != null) {
-            Navbar(
-                activePage = "Explore",
-                navController = navController,
-                userId = id
-
-            )
-        }
-
-    }
-    // use the id to fetch the user data
-    // pass in the user data to the header -> profile image
 }
 

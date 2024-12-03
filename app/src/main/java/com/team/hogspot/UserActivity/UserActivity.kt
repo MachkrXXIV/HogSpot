@@ -1,6 +1,7 @@
 package com.team.hogspot.UserActivity
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -16,17 +17,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.team.hogspot.Navigation.Navigation
+import androidx.navigation.NavHostController
 import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.R
 import com.team.hogspot.model.geospot.Difficulty
 import com.team.hogspot.composables.H2
 import com.team.hogspot.composables.Header
-import com.team.hogspot.composables.Hogspot
 import com.team.hogspot.composables.Navbar
 import com.team.hogspot.composables.SecondaryButton
 import com.team.hogspot.composables.SpotCarousel
@@ -69,10 +69,12 @@ fun UserPreview() {
 @Composable
 fun UserScreen(
     id: String,
+    createdSpot: String,
     navController: NavController
 ) {
     UserPage(
         userId = id,
+        createdSpot = createdSpot,
         navController = navController
     )
 }
@@ -81,16 +83,24 @@ fun UserScreen(
 @Composable
 fun UserPage(
     userId: String,
+    createdSpot: String? = "false",
     navController: NavController? = null
 ) {
+    val context = LocalContext.current
+    var makeToast: Boolean = (createdSpot == "true")
+    if (makeToast) {
+        // toast("Spot created!")
+        Toast.makeText(context, "HogSpot Created!", Toast.LENGTH_LONG).show()
+        makeToast = false
+    }
 
     val user = User(
         userId = 1,
         userName = "Jordi Castro",
         email = "jordi@gmail.com",
         dateJoined = LocalDateTime.now(),
-        streak = 5,
-        numSpots = 3,
+        streak = 3,
+        numSpots = 5,
         friends = listOf(
         )
     )
@@ -125,20 +135,72 @@ fun UserPage(
         ),
     )
 
-    val spots = mutableListOf<GeoSpot>(
+    val spots = listOf(
         GeoSpot(
             geoSpotId = 1,
             creatorId = 1,
             name = "Title1",
+            imgFilePath = "spot_image1",
             description = "Description1",
-            imgFilePath = "ImageUrls1",
-            hint = "Hint1",
+            difficulty = Difficulty.EASY,
+            hint = "hint1",
             latitude = 1.0,
             longitude = 1.0,
-            creationDate = LocalDateTime.now(),
-            rating = 3.0,
-            difficulty = Difficulty.EASY
-        )
+            creationDate = LocalDateTime.of(2024, 12, 2, 10, 10),
+            rating = 5.0
+        ),
+        GeoSpot(
+            geoSpotId = 2,
+            creatorId = 1,
+            name = "Title2",
+            imgFilePath = "spot_image2",
+            description = "Description2",
+            difficulty = Difficulty.MEDIUM,
+            hint = "hint2",
+            latitude = 1.0,
+            longitude = 1.0,
+            creationDate = LocalDateTime.of(2024, 4, 18, 12, 33),
+            rating = 4.0
+        ),
+        GeoSpot(
+            geoSpotId = 3,
+            creatorId = 1,
+            name = "Title3",
+            imgFilePath = "spot_image3",
+            description = "Description3",
+            difficulty = Difficulty.HARD,
+            hint = "hint3",
+            latitude = 1.0,
+            longitude = 1.0,
+            creationDate = LocalDateTime.of(2024, 9, 21, 23, 11),
+            rating = 3.0
+        ),
+        GeoSpot(
+            geoSpotId = 4,
+            creatorId = 1,
+            name = "Title4",
+            imgFilePath = "spot_image4",
+            description = "Description4",
+            difficulty = Difficulty.EASY,
+            hint = "hint4",
+            latitude = 1.0,
+            longitude = 1.0,
+            creationDate = LocalDateTime.of(2024, 6, 22, 4, 47),
+            rating = 4.0
+        ),
+        GeoSpot(
+            geoSpotId = 5,
+            creatorId = 1,
+            name = "Title5",
+            imgFilePath = "spot_image5",
+            description = "Description5",
+            difficulty = Difficulty.MEDIUM,
+            hint = "hint5",
+            latitude = 1.0,
+            longitude = 1.0,
+            creationDate = LocalDateTime.of(2024, 3, 15, 15, 22),
+            rating = 5.0
+        ),
     )
 
     Box(
@@ -193,7 +255,7 @@ fun UserPage(
 
                 SecondaryButton(
                     onClick = {
-                         navController?.navigate(Screen.NewSpotScreen.route)
+                         navController?.navigate(Screen.NewSpotScreen.withArgs(userId))
                     },
                     text = "New HogSpot",
                     iconId = R.drawable.plus_icon,

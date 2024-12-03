@@ -26,9 +26,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.team.hogspot.R
+import com.team.hogspot.model.geospot.Difficulty
+import com.team.hogspot.model.geospot.GeoSpot
 import com.team.hogspot.ui.theme.AppTheme
+import java.time.LocalDateTime
 
 
 data class SpotTemp(
@@ -50,10 +52,18 @@ enum class DifficultyAndRatingSize {
 }
 
 @Composable
-fun HogSpotCard(
-    hogspot: Hogspot,
+fun SpotCard(
+    geospot: GeoSpot,
     onSpotClick: () -> Unit = {},
 ) {
+    val imageId = when (geospot.imgFilePath) {
+        "spot_image1" -> R.drawable.spot_image1
+        "spot_image2" -> R.drawable.spot_image2
+        "spot_image3" -> R.drawable.spot_image3
+        "spot_image4" -> R.drawable.spot_image4
+        "spot_image5" -> R.drawable.spot_image5
+        else -> R.drawable.spot_image1
+    }
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -69,7 +79,7 @@ fun HogSpotCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.spot_image1),
+                painter = painterResource(id = imageId),
                 contentDescription = null,
                 modifier = Modifier
                     .width(120.dp)
@@ -88,13 +98,13 @@ fun HogSpotCard(
                 .height(24.dp), // make it so the text does not overflow the card
         ) {
             P(
-                text = hogspot.title,
+                text = geospot.name,
             )
         }
         Spacer(modifier = Modifier.height(AppTheme.size.small))
         DifficultyAndRating(
-            difficulty = hogspot.difficulty,
-            rating = hogspot.rating,
+            difficulty = geospot.difficulty,
+            rating = geospot.rating,
             size = DifficultyAndRatingSize.XS
         )
     }
@@ -103,8 +113,8 @@ fun HogSpotCard(
 
 @Composable
 fun SpotCarousel(
-    spots: List<Hogspot>,
-    onSpotClick: (Hogspot) -> Unit = {},
+    spots: List<GeoSpot>,
+    onSpotClick: (GeoSpot) -> Unit = {},
 ) {
     Box(
         modifier = Modifier
@@ -121,10 +131,10 @@ fun SpotCarousel(
             horizontalArrangement = Arrangement.spacedBy(AppTheme.size.small),
 
         ) {
-            spots.forEach { hogspot ->
-                HogSpotCard(
-                    hogspot = hogspot,
-                    onSpotClick = { onSpotClick(hogspot) }
+            spots.forEach { geospot ->
+                SpotCard(
+                    geospot = geospot,
+                    onSpotClick = { onSpotClick(geospot) }
                 )
             }
         }
@@ -133,14 +143,17 @@ fun SpotCarousel(
 
 @Composable
 fun DetailedSpotCard(
-    hogspot: Hogspot,
+    geospot: GeoSpot,
     onPlayClick: () -> Unit = {}
 
 ) {
+
+    val formattedDate = formatSpotDate(geospot.creationDate)
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(420.dp)
+            .height(430.dp)
             .clip(AppTheme.shape.container)
             .background(AppTheme.colorScheme.backgroundSecondary)
             .padding(AppTheme.size.medium),
@@ -164,9 +177,15 @@ fun DetailedSpotCard(
             contentAlignment = Alignment.CenterStart
         ) {
             H1(
-                text = hogspot.title
+                text = geospot.name
             )
         }
+
+        P(
+            text = formattedDate,
+            color = AppTheme.colorScheme.textSecondary,
+            textAlignment = TextAlign.Start
+        )
 
         Box(
             modifier = Modifier
@@ -177,7 +196,7 @@ fun DetailedSpotCard(
 
         ) {
             P(
-                text = hogspot.description,
+                text = geospot.description,
                 color = AppTheme.colorScheme.textSecondary,
                 textAlignment = TextAlign.Start
             )
@@ -189,8 +208,8 @@ fun DetailedSpotCard(
         )
 
         DifficultyAndRating(
-            difficulty = hogspot.difficulty,
-            rating = hogspot.rating
+            difficulty = geospot.difficulty,
+            rating = geospot.rating
         )
 
         Spacer(
@@ -214,7 +233,7 @@ fun DetailedSpotCard(
 }
 
 @Composable
-fun DifficultyAndRating(difficulty: Difficulty, rating: Float, size: DifficultyAndRatingSize = DifficultyAndRatingSize.SM) {
+fun DifficultyAndRating(difficulty: Difficulty, rating: Double, size: DifficultyAndRatingSize = DifficultyAndRatingSize.SM) {
     val spacing = when (size) {
         DifficultyAndRatingSize.XS -> AppTheme.size.small
         DifficultyAndRatingSize.SM -> AppTheme.size.medium
@@ -243,36 +262,71 @@ fun DifficultyAndRating(difficulty: Difficulty, rating: Float, size: DifficultyA
 private fun SpotCardsPreview() {
 
     val spots = listOf(
-        Hogspot(
-            id = 1,
-            title = "Title1",
+        GeoSpot(
+            geoSpotId = 1,
+            creatorId = 1,
+            name = "Title1",
+            imgFilePath = "spot_image1",
             description = "Description1",
-            location = "Location1",
-            date = "12.2.2024",
-            imageUrls = "ImageUrls1",
-            rating = 3.0f,
-            difficulty = Difficulty.EASY
+            difficulty = Difficulty.EASY,
+            hint = "hint1",
+            latitude = 1.0,
+            longitude = 1.0,
+            creationDate = LocalDateTime.of(2024, 12, 2, 10, 10),
+            rating = 5.0
         ),
-        Hogspot(
-            id = 2,
-            title = "Title2",
+        GeoSpot(
+            geoSpotId = 2,
+            creatorId = 1,
+            name = "Title2",
+            imgFilePath = "spot_image2",
             description = "Description2",
-            location = "Location2",
-            date = "12.2.2024",
-            imageUrls = "ImageUrls2",
-            rating = 4.0f,
-            difficulty = Difficulty.MEDIUM
+            difficulty = Difficulty.MEDIUM,
+            hint = "hint2",
+            latitude = 1.0,
+            longitude = 1.0,
+            creationDate = LocalDateTime.of(2024, 4, 18, 12, 33),
+            rating = 4.0
         ),
-        Hogspot(
-            id = 3,
-            title = "Title3",
+        GeoSpot(
+            geoSpotId = 3,
+            creatorId = 1,
+            name = "Title3",
+            imgFilePath = "spot_image3",
             description = "Description3",
-            location = "Location3",
-            date = "12.2.2024",
-            imageUrls = "ImageUrls3",
-            rating = 5.0f,
-            difficulty = Difficulty.HARD
-        )
+            difficulty = Difficulty.HARD,
+            hint = "hint3",
+            latitude = 1.0,
+            longitude = 1.0,
+            creationDate = LocalDateTime.of(2024, 9, 21, 23, 11),
+            rating = 3.0
+        ),
+        GeoSpot(
+            geoSpotId = 4,
+            creatorId = 1,
+            name = "Title4",
+            imgFilePath = "spot_image4",
+            description = "Description4",
+            difficulty = Difficulty.EASY,
+            hint = "hint4",
+            latitude = 1.0,
+            longitude = 1.0,
+            creationDate = LocalDateTime.of(2024, 6, 22, 4, 47),
+            rating = 4.0
+        ),
+        GeoSpot(
+            geoSpotId = 5,
+            creatorId = 1,
+            name = "Title5",
+            imgFilePath = "spot_image5",
+            description = "Description5",
+            difficulty = Difficulty.MEDIUM,
+            hint = "hint5",
+            latitude = 1.0,
+            longitude = 1.0,
+            creationDate = LocalDateTime.of(2024, 3, 15, 15, 22),
+            rating = 5.0
+        ),
     )
 
 
@@ -292,15 +346,18 @@ private fun SpotCardsPreview() {
             Spacer(modifier = Modifier.height(AppTheme.size.medium))
 
             DetailedSpotCard(
-                hogspot = Hogspot(
-                    id = 1,
-                    title = "Title1",
-                    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                    location = "Location1",
-                    date = "12.2.2024",
-                    imageUrls = "ImageUrls1",
-                    rating = 3.0f,
-                    difficulty = Difficulty.EASY
+                geospot = GeoSpot(
+                    geoSpotId = 1,
+                    creatorId = 1,
+                    name = "Title1",
+                    imgFilePath = "spot_image1",
+                    description = "Description1",
+                    difficulty = Difficulty.EASY,
+                    hint = "hint1",
+                    latitude = 1.0,
+                    longitude = 1.0,
+                    creationDate = LocalDateTime.of(2024, 12, 2, 10, 10),
+                    rating = 5.0
                 )
             )
         }

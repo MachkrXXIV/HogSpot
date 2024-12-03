@@ -18,17 +18,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.composables.DetailedSpotCard
-import com.team.hogspot.composables.Difficulty
-import com.team.hogspot.composables.H1
 import com.team.hogspot.composables.H2
 import com.team.hogspot.composables.Header
 import com.team.hogspot.composables.Hogspot
 import com.team.hogspot.composables.Navbar
-import com.team.hogspot.composables.P
 import com.team.hogspot.composables.SpotCarousel
+import com.team.hogspot.model.geospot.Difficulty
+import com.team.hogspot.model.geospot.GeoSpot
 import com.team.hogspot.ui.theme.AppTheme
-
-
+import java.time.LocalDateTime
 
 
 @Preview(showBackground = true)
@@ -51,7 +49,7 @@ fun DetailedSpotScreen(
              navController.navigate(Screen.PlayScreen.route + "/$spotId")
         },
         onUserClick = {
-            navController.navigate(Screen.UserScreen.withArgs(id))
+            navController.navigate(Screen.UserScreen.withArgs(id, "false"))
         },
         navController = navController
     )
@@ -67,39 +65,74 @@ fun DetailedSpotPage (
 ) {
 
     val spots = listOf(
-        Hogspot(
-            id = 1,
-            title = "Title1",
+        GeoSpot(
+            geoSpotId = 1,
+            creatorId = 1,
+            name = "Title1",
+            imgFilePath = "spot_image1",
             description = "Description1",
-            location = "Location1",
-            date = "12.2.2024",
-            imageUrls = "ImageUrls1",
-            rating = 3.0f,
-            difficulty = Difficulty.EASY
+            difficulty = Difficulty.EASY,
+            hint = "hint1",
+            latitude = 1.0,
+            longitude = 1.0,
+            creationDate = LocalDateTime.of(2024, 12, 2, 10, 10),
+            rating = 5.0
         ),
-        Hogspot(
-            id = 2,
-            title = "Title2",
+        GeoSpot(
+            geoSpotId = 2,
+            creatorId = 1,
+            name = "Title2",
+            imgFilePath = "spot_image2",
             description = "Description2",
-            location = "Location2",
-            date = "12.2.2024",
-            imageUrls = "ImageUrls2",
-            rating = 4.0f,
-            difficulty = Difficulty.MEDIUM
+            difficulty = Difficulty.MEDIUM,
+            hint = "hint2",
+            latitude = 1.0,
+            longitude = 1.0,
+            creationDate = LocalDateTime.of(2024, 4, 18, 12, 33),
+            rating = 4.0
         ),
-        Hogspot(
-            id = 3,
-            title = "Title3",
+        GeoSpot(
+            geoSpotId = 3,
+            creatorId = 1,
+            name = "Title3",
+            imgFilePath = "spot_image3",
             description = "Description3",
-            location = "Location3",
-            date = "12.2.2024",
-            imageUrls = "ImageUrls3",
-            rating = 5.0f,
-            difficulty = Difficulty.HARD
-        )
+            difficulty = Difficulty.HARD,
+            hint = "hint3",
+            latitude = 1.0,
+            longitude = 1.0,
+            creationDate = LocalDateTime.of(2024, 9, 21, 23, 11),
+            rating = 3.0
+        ),
+        GeoSpot(
+            geoSpotId = 4,
+            creatorId = 1,
+            name = "Title4",
+            imgFilePath = "spot_image4",
+            description = "Description4",
+            difficulty = Difficulty.EASY,
+            hint = "hint4",
+            latitude = 1.0,
+            longitude = 1.0,
+            creationDate = LocalDateTime.of(2024, 6, 22, 4, 47),
+            rating = 4.0
+        ),
+        GeoSpot(
+            geoSpotId = 5,
+            creatorId = 1,
+            name = "Title5",
+            imgFilePath = "spot_image5",
+            description = "Description5",
+            difficulty = Difficulty.MEDIUM,
+            hint = "hint5",
+            latitude = 1.0,
+            longitude = 1.0,
+            creationDate = LocalDateTime.of(2024, 3, 15, 15, 22),
+            rating = 5.0
+        ),
     )
-    val hogspot = spots[0]
-    val hogspotTitle = hogspot.title
+    val geospot = spots[0]
+    val geospotName = geospot.name
 
     Box(
         modifier = Modifier
@@ -131,22 +164,22 @@ fun DetailedSpotPage (
             ) {
                 Spacer(modifier = Modifier.height(12.dp))
                 DetailedSpotCard(
-                    hogspot = hogspot,
-                    onPlayClick = { onPlayClick(hogspot.id.toString()) }
+                    geospot = geospot,
+                    onPlayClick = { onPlayClick(geospot.geoSpotId.toString()) }
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 H2(
-                    text = "More like $hogspotTitle:",
+                    text = "More like $geospotName:",
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 SpotCarousel(
                     spots = spots,
-                    onSpotClick = { hogspot ->
-                        navController?.navigate(Screen.DetailedSpotScreen.withArgs(hogspot.id.toString()))
+                    onSpotClick = { geospot ->
+                        navController?.navigate(Screen.DetailedSpotScreen.withArgs(geospot.geoSpotId.toString()))
                     }
                 )
             }

@@ -217,7 +217,7 @@ fun Navbar(
         object : NavItemProps {
             override val text = "Your Spots"
             override val onClick: () -> Unit = {
-                navController?.navigate(Screen.UserScreen.withArgs(userId))
+                navController?.navigate(Screen.UserScreen.withArgs(userId, "false"))
             }
             override val iconId = R.drawable.map_icon
             override val isActive = activePage == "Your Spots"

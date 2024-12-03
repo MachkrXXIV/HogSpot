@@ -63,20 +63,39 @@ fun Navigation(startDestination: String = Screen.LandingScreen.route) {
         }
 
         composable(
-            route = Screen.UserScreen.route + "/{id}",
+            route = Screen.UserScreen.route + "/{id}/{createdSpot}",
             arguments = listOf(
                 navArgument("id") {
                     type = NavType.StringType
                     nullable = false
+                },
+                navArgument("createdSpot") {
+                    type = NavType.StringType
+                    defaultValue = "false"
+                    nullable = true
                 }
             )
         ) { entry ->
-            entry.arguments?.getString("id")?.let { UserScreen(it, navController) }
+            entry.arguments?.getString("id")?.let {
+                UserScreen(
+                    it,
+                    entry.arguments?.getString("createdSpot") ?: "false",
+                    navController,
+                )
+            }
 
         }
 
-        composable(route = Screen.NewSpotScreen.route) {
-            NewSpotScreen(navController)
+        composable(
+            route = Screen.NewSpotScreen.route + "/{id}",
+            arguments = listOf(
+                navArgument("id") {
+                    type = NavType.StringType
+                    nullable = false
+                },
+            )
+        ) {
+            NewSpotScreen(it.arguments?.getString("id") ?: "", navController)
         }
 
         composable(

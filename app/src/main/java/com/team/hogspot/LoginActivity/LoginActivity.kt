@@ -2,6 +2,7 @@ package com.team.hogspot.LoginActivity
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -23,6 +24,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults.textFieldColors
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -112,8 +114,21 @@ fun LoginForm(
     onLogin: (String, String) -> String,
     onNavigate: (String) -> Unit = {}
 ) {
-    var username by remember { mutableStateOf("username...") }
-    var password by remember { mutableStateOf("password...") }
+    val context = LocalContext.current
+    var username by remember { mutableStateOf("Username...") }
+    var password by remember { mutableStateOf("Password...") }
+    var isActive by remember { mutableStateOf(false) }
+
+    if (username !== "Username..." && password !== "Password...") {
+        isActive = true
+    }
+    if (username.isEmpty()) {
+        username = "Username..."
+    }
+    if (password.isEmpty()) {
+        password = "Password..."
+    }
+
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -155,12 +170,16 @@ fun LoginForm(
         PrimaryButton(
             text = "LOGIN",
             onClick = {
-                val id = onLogin(username, password)
-                if (id != "-1")
-                    onNavigate(id)
+                if (isActive) {
+                    val id = onLogin(username, password)
+                    if (id != "-1")
+                        onNavigate(id)
+                } else {
+                    Toast.makeText(context, "Fill out all required fields.", Toast.LENGTH_LONG).show()
+                }
             },
             shape = AppTheme.shape.container,
-            isActive = false,
+            isActive = isActive,
         )
 
         Spacer(modifier = Modifier.height(24.dp))

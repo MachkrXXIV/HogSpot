@@ -2,6 +2,7 @@ package com.team.hogspot.LoginActivity
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -24,6 +25,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults.textFieldColors
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
@@ -114,10 +116,29 @@ fun SignUpForm(
     onNavigate: (String) -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
+    val context = LocalContext.current
     var email by remember { mutableStateOf("Email...") }
     var username by remember { mutableStateOf("Username...") }
     var password by remember { mutableStateOf("Password...") }
     var confirmPassword by remember { mutableStateOf("Confirm Password...") }
+    var isActive by remember { mutableStateOf(false) }
+
+    if (email !== "Email..." && username !== "Username..." && password !== "Password..." && confirmPassword !== "Confirm Password...") {
+        isActive = true
+    }
+    if (email.isEmpty()) {
+        email = "Email..."
+    }
+    if (username.isEmpty()) {
+        username = "Username..."
+    }
+    if (password.isEmpty()) {
+        password = "Password..."
+    }
+    if (confirmPassword.isEmpty()) {
+        confirmPassword = "Confirm Password..."
+    }
+
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -170,12 +191,16 @@ fun SignUpForm(
         PrimaryButton(
             text = "SIGN UP",
             onClick = {
-                val id: String = onSignUp(email, username)
-                if (id != "-1")
-                    onNavigate(id)
+                if (isActive) {
+                    val id: String = onSignUp(email, username)
+                    if (id != "-1")
+                        onNavigate(id)
+                } else {
+                    Toast.makeText(context, "Fill out all required fields.", Toast.LENGTH_LONG).show()
+                }
             },
             shape = AppTheme.shape.container,
-            isActive = false,
+            isActive = isActive,
         )
 
         Spacer(modifier = Modifier.height(16.dp))

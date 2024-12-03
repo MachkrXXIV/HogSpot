@@ -86,14 +86,6 @@ fun UserPage(
     createdSpot: String? = "false",
     navController: NavController? = null
 ) {
-    val context = LocalContext.current
-    var makeToast: Boolean = (createdSpot == "true")
-    if (makeToast) {
-        // toast("Spot created!")
-        Toast.makeText(context, "HogSpot Created!", Toast.LENGTH_LONG).show()
-        makeToast = false
-    }
-
     val user = User(
         userId = 1,
         userName = "Jordi Castro",

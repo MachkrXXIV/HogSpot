@@ -53,7 +53,8 @@ fun Input (
     iconId: Int = -1,
     size: InputSize = InputSize.SM,
     shape: Shape = AppTheme.shape.container,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    label: String = ""
 ) {
     val height = when (size) {
         InputSize.XS -> 56.dp
@@ -98,19 +99,20 @@ fun Input (
             }
             TextField(
                 value = value,
+                label = { Text(label) },
                 onValueChange = { onValueChange(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(),
                 textStyle = AppTheme.typography.h3.copy(
-                    color = AppTheme.colorScheme.textTertiary
+                    color = AppTheme.colorScheme.textPrimary
                 ),
                 maxLines = 4,
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
                     focusedTextColor = AppTheme.colorScheme.textPrimary,
-                    unfocusedTextColor = AppTheme.colorScheme.textTertiary,
+                    unfocusedTextColor = AppTheme.colorScheme.textPrimary,
                     cursorColor = blue500,
                     focusedIndicatorColor = purple500,
                 )

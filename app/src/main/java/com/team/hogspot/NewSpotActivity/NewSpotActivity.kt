@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -81,17 +82,7 @@ fun NewSpotScreen(
     id: String,
     navController: NavController
 ) {
-//    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-//    val imagePickerLauncher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.GetContent(),
-//        onResult = { uri ->
-//            selectedImageUri = uri
-//        }
-//    )
-//
-//    fun onImageClick() {
-//        imagePickerLauncher.launch("image/*")
-//    }
+    var context = LocalContext.current
     NewSpotPage(
         onBackClick = {
             navController.popBackStack()
@@ -101,6 +92,7 @@ fun NewSpotScreen(
             // TODO: submit form data to hogspot spot table
             // redirect back to your spots (popBackStack)
             // toast creation of new spot
+            Toast.makeText(context, "HogSpot Created!", Toast.LENGTH_LONG).show()
             navController.navigate(Screen.UserScreen.withArgs(id, "true"))
         },
         navController = navController
@@ -113,9 +105,9 @@ fun NewSpotPage(
     onSubmit: () -> Unit, // TODO: (formDataObject) -> Unit
     navController: NavController? = null
 ) {
-    var title by remember { mutableStateOf("Title...") }
-    var description by remember { mutableStateOf("Description...") }
-    var location by remember { mutableStateOf("location...") }
+    var title by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),

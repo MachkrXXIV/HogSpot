@@ -55,7 +55,7 @@ class NewSpotActivity : ComponentActivity() {
             AppTheme {
                 NewSpotPage(
                     onBackClick = {},
-                    onImageClick = {},
+//                    onImageClick = {},
                     onSubmit = {}
                 )
             }
@@ -70,7 +70,7 @@ fun NewSpotPreview() {
     AppTheme {
         NewSpotPage(
             onBackClick = {},
-            onImageClick = {},
+//            onImageClick = {},
             onSubmit = {}
         )
     }

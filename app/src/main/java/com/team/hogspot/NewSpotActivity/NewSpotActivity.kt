@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.R
 import com.team.hogspot.composables.H2
 import com.team.hogspot.composables.Header
@@ -72,6 +73,7 @@ fun NewSpotPreview() {
 
 @Composable
 fun NewSpotScreen(
+    id: String,
     navController: NavController
 ) {
 //    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
@@ -94,15 +96,17 @@ fun NewSpotScreen(
             // TODO: submit form data to hogspot spot table
             // redirect back to your spots (popBackStack)
             // toast creation of new spot
-            navController.popBackStack()
-        }
+            navController.navigate(Screen.UserScreen.withArgs(id, "true"))
+        },
+        navController = navController
     )
 }
 
 @Composable
 fun NewSpotPage(
     onBackClick: () -> Unit,
-    onSubmit: () -> Unit // TODO: (formDataObject) -> Unit
+    onSubmit: () -> Unit, // TODO: (formDataObject) -> Unit
+    navController: NavController? = null
 ) {
     var title by remember { mutableStateOf("Title...") }
     var description by remember { mutableStateOf("Description...") }
@@ -223,7 +227,7 @@ fun NewSpotPage(
                         .padding(4.dp)
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
                 H2(
                     text = "Difficulty"
@@ -252,7 +256,7 @@ fun NewSpotPage(
 
             Navbar(
                 activePage = "Your Spots",
-                navController = null,
+                navController = navController,
                 userId = "1"
             )
 

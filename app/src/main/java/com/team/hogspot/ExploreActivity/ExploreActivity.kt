@@ -39,20 +39,8 @@ class ExploreActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val mockSpots: List<GeoSpot> = listOf()
-            val mockUser = User(
-                userId = 1,
-                userName = "Bob",
-                email = "bob@gmail.com",
-                dateJoined = LocalDateTime.now(),
-                streak = 4,
-                numSpots = 2,
-                friends = listOf()
-            )
             AppTheme {
                 ExplorePage(
-//                    mockSpots,
-//                    mockUser,
                     navController = null,
                     userId = "1"
                 )
@@ -65,63 +53,9 @@ class ExploreActivity : ComponentActivity() {
 
 @Preview(showBackground = true)
 @Composable
-fun UserPreview() {
-    val mockSpots: List<GeoSpot> =
-        listOf(
-            GeoSpot(
-                geoSpotId = 1,
-                name = "HogSpot 1",
-                description = "This is a description of HogSpot 1",
-                latitude = 0.0,
-                longitude = 0.0,
-                creatorId = 1,
-                creationDate = LocalDateTime.now(),
-                imgFilePath = "res/drawable/spot_image1.png",
-                difficulty = Difficulty.EASY,
-                hint = "This is a hint for HogSpot 1",
-                rating = 3.0,
-                ),
-            GeoSpot(
-                geoSpotId = 2,
-                name = "HogSpot 2",
-                description = "This is a description of HogSpot 2",
-                latitude = 0.0,
-                longitude = 0.0,
-                creatorId = 2,
-                creationDate = LocalDateTime.now(),
-                imgFilePath = "img2.jpg",
-                difficulty = Difficulty.MEDIUM,
-                hint = "This is a hint for HogSpot 2",
-                rating = 4.0,
-                ),
-            GeoSpot(
-                geoSpotId = 2,
-                name = "HogSpot 3",
-                description = "This is a description of HogSpot 2",
-                latitude = 0.0,
-                longitude = 0.0,
-                creatorId = 2,
-                creationDate = LocalDateTime.now(),
-                imgFilePath = "img2.jpg",
-                difficulty = Difficulty.MEDIUM,
-                hint = "This is a hint for HogSpot 2",
-                rating = 3.5,
-                )
-        )
-    val mockUser = User(
-        userId = 1,
-        userName = "Bob",
-        email = "bob@gmail.com",
-        dateJoined = LocalDateTime.now(),
-        streak = 4,
-        numSpots = 2,
-        friends = listOf()
-    )
-
+fun ExplorePreview() {
     AppTheme {
         ExplorePage(
-//            mockSpots,
-//            mockUser,
             onUserClick = {
                 Log.d("ExploreActivity", "User clicked")
             },
@@ -147,8 +81,6 @@ fun ExploreScreen(
 
 @Composable
 fun ExplorePage(
-//    spots: List<GeoSpot>,
-//    user: User,
     onUserClick: () -> Unit = {},
     navController: NavController? = null,
     userId: String,
@@ -234,7 +166,7 @@ fun ExplorePage(
                 SpotCarousel(
                     spots = spots,
                     onSpotClick = { spot ->
-                        Log.d("ExploreActivity", "Spot clicked: $spot")
+                        navController?.navigate(Screen.DetailedSpotScreen.withArgs(spot.geoSpotId.toString()))
                     }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -244,11 +176,11 @@ fun ExplorePage(
                     listOf(
                         User(
                             userId = 1,
-                            userName = "Bob",
+                            userName = "Lucy",
                             email = "bob@gmail.com",
                             dateJoined = LocalDateTime.now(),
                             streak = 4,
-                            numSpots = 2,
+                            numSpots = 20,
                             friends = listOf()
                         ),
                         User(
@@ -257,7 +189,7 @@ fun ExplorePage(
                             email = "kevin@gmail.com",
                             dateJoined = LocalDateTime.now(),
                             streak = 0,
-                            numSpots = 1,
+                            numSpots = 18,
                             friends = listOf()
                         ),
                         User(
@@ -275,7 +207,7 @@ fun ExplorePage(
                             email = "stuart@gmail.com",
                             dateJoined = LocalDateTime.now(),
                             streak = 3,
-                            numSpots = 3,
+                            numSpots = 13,
                             friends = listOf()
                         ),
                         User(
@@ -284,7 +216,7 @@ fun ExplorePage(
                             email = "stuart@gmail.com",
                             dateJoined = LocalDateTime.now(),
                             streak = 12,
-                            numSpots = 12,
+                            numSpots = 8,
                             friends = listOf()
                         ),
                         User(
@@ -293,7 +225,7 @@ fun ExplorePage(
                             email = "bob@gmail.com",
                             dateJoined = LocalDateTime.now(),
                             streak = 4,
-                            numSpots = 2,
+                            numSpots = 7,
                             friends = listOf()
                         ),
                         User(
@@ -302,7 +234,7 @@ fun ExplorePage(
                             email = "bob@gmail.com",
                             dateJoined = LocalDateTime.now(),
                             streak = 4,
-                            numSpots = 2,
+                            numSpots = 4,
                             friends = listOf()
                         ),
                         User(

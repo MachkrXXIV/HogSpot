@@ -37,8 +37,8 @@ import com.team.hogspot.ui.theme.AppTheme
 import java.time.LocalDateTime
 
 class SearchActivity : ComponentActivity() {
-    override fun onCreate(savedInstancesBundle: Bundle?) {
-        super.onCreate(savedInstancesBundle)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         setContent {
@@ -51,10 +51,6 @@ class SearchActivity : ComponentActivity() {
             }
         }
     }
-
-    // private fun
-
-
 }
 
 
@@ -167,6 +163,7 @@ fun SearchPage(
         ),
 
     )
+
     val user = User(
         userId = 1,
         userName = "Bob",

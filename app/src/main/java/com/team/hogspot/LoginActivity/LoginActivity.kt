@@ -1,7 +1,6 @@
 package com.team.hogspot.LoginActivity
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,29 +8,20 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.material3.ExposedDropdownMenuDefaults.textFieldColors
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.team.hogspot.Navigation.Screen
 import com.team.hogspot.R
-import com.team.hogspot.composables.H1
 import com.team.hogspot.composables.H3
 import com.team.hogspot.composables.Header
 import com.team.hogspot.composables.Input
@@ -51,7 +41,7 @@ class LoginActivity : ComponentActivity() {
                     onBackClick = {  },
                     onLogin = { username, password ->
                         val id = login(username, password)
-                        id.toString()
+                        id
                     },
                     onNavigate = {  }
 
@@ -63,15 +53,6 @@ class LoginActivity : ComponentActivity() {
 
 }
 
-@Composable
-fun MyLoginApplicationTheme(content: @Composable () -> Unit) {
-    MaterialTheme {
-        Surface(color = Color(0xFF101820)) {
-            content()
-        }
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 fun LoginFormPreview() {
@@ -80,7 +61,7 @@ fun LoginFormPreview() {
              onBackClick = {},
              onLogin = { username, password ->
                  val id = login(username, password)
-                 id.toString()
+                 id
              },
              onNavigate = {}
          )
@@ -93,7 +74,7 @@ fun LoginScreen(navController: NavController) {
         onBackClick = { navController.popBackStack() },
         onLogin = { username, password ->
             val id = login(username, password)
-            id.toString()
+            id
         },
         onNavigate = { id ->
             navController.navigate(Screen.ExploreScreen.withArgs(id))
@@ -107,7 +88,6 @@ fun login(username: String, password: String): String {
     return "2"
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginForm(
     onBackClick: () -> Unit,
@@ -115,18 +95,12 @@ fun LoginForm(
     onNavigate: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
-    var username by remember { mutableStateOf("Username...") }
-    var password by remember { mutableStateOf("Password...") }
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     var isActive by remember { mutableStateOf(false) }
 
-    if (username !== "Username..." && password !== "Password...") {
+    if (username !== "" && password !== "") {
         isActive = true
-    }
-    if (username.isEmpty()) {
-        username = "Username..."
-    }
-    if (password.isEmpty()) {
-        password = "Password..."
     }
 
 
@@ -149,17 +123,16 @@ fun LoginForm(
 
         Input(
             value = username,
-            onValueChange = {
-                username = it
-                Log.d("LoginActivity", "updated username: $it")
-            },
+            label = "Username",
+            onValueChange = { username = it},
             shape = AppTheme.shape.containerRoundedTop,
             iconId = -1,
-            size = InputSize.XS
+            size = InputSize.XS,
         )
         Input(
             value = password,
-            onValueChange = { password = it },
+            label = "Password",
+            onValueChange = { password = it},
             shape = AppTheme.shape.containerRoundedBottom,
             iconId = -1,
             size = InputSize.XS

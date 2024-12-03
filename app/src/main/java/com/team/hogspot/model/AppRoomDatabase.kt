@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 // Annotates class to be a Room Database with a table (entity) of app's models
 @Database(entities = [User::class, GeoSpot::class, UserGeoSpotCrossRef::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
-public abstract class AppRoomDatabase : RoomDatabase() {
+abstract class AppRoomDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
     abstract fun geoSpotDao(): GeoSpotDao
@@ -73,8 +73,8 @@ public abstract class AppRoomDatabase : RoomDatabase() {
             userDao.insert(user1)
             userDao.insert(user2)
 
-            val spot1 = GeoSpot(1, 1, "The Big Tree", "tree.jpg", "A big tree", Difficulty.MEDIUM, "Look up", 0.0, 0.0, LocalDateTime.now())
-            val spot2 = GeoSpot(2, 2, "The Small Tree", "tree.jpg", "A small tree", Difficulty.EASY, "Look down", 0.0, 0.0, LocalDateTime.now())
+            val spot1 = GeoSpot(1, 1, "The Big Tree", "tree.jpg", "A big tree", Difficulty.MEDIUM, "Look up", 0.0, 0.0, LocalDateTime.now(), 0.0)
+            val spot2 = GeoSpot(2, 2, "The Small Tree", "tree.jpg", "A small tree", Difficulty.EASY, "Look down", 0.0, 0.0, LocalDateTime.now(), 0.0)
             spotDao.insert(spot1)
             spotDao.insert(spot2)
         }

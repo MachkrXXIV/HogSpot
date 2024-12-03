@@ -6,36 +6,24 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.material3.ExposedDropdownMenuDefaults.textFieldColors
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.team.hogspot.App
 import com.team.hogspot.Navigation.Screen
-import com.team.hogspot.UserViewModel
-import com.team.hogspot.UserViewModelFactory
 import com.team.hogspot.composables.Header
 import com.team.hogspot.composables.Input
 import com.team.hogspot.composables.InputSize
@@ -44,9 +32,9 @@ import com.team.hogspot.composables.PrimaryButton
 import com.team.hogspot.ui.theme.AppTheme
 
 class SignUpActivity : ComponentActivity() {
-    private val userViewModel: UserViewModel by viewModels {
-        UserViewModelFactory((application as App).userRepository)
-    }
+//    private val userViewModel: UserViewModel by viewModels {
+//        UserViewModelFactory((application as App).userRepository)
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +46,7 @@ class SignUpActivity : ComponentActivity() {
                     onBackClick = { },
                     onSignUp = { email, username ->
                         val id = insertIntoDB(email, username)
-                        id.toString()
+                        id
                     },
                     onNavigate = {  },
                     onNavigateToLogin = {  }
@@ -78,7 +66,7 @@ fun SignUpFormPreview() {
             onBackClick = { },
             onSignUp = { email, username ->
                 val id = insertIntoDB(email, username)
-                id.toString()
+                id
             },
             onNavigate = {  },
             onNavigateToLogin = {  }
@@ -92,7 +80,7 @@ fun SignUpScreen(navController: NavController) {
         onBackClick = {navController.popBackStack() },
         onSignUp = { email, username ->
             val id = insertIntoDB(email, username)
-            id.toString()
+            id
         },
         onNavigate = { id ->
             navController.navigate(Screen.ExploreScreen.withArgs(id))
@@ -108,7 +96,6 @@ fun insertIntoDB(email: String, username: String): String {
     return "1"
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpForm(
     onBackClick: () -> Unit = {},

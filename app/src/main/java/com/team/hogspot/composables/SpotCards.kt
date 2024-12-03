@@ -32,21 +32,6 @@ import com.team.hogspot.model.geospot.GeoSpot
 import com.team.hogspot.ui.theme.AppTheme
 import java.time.LocalDateTime
 
-
-data class SpotTemp(
-    val id: Int,
-    val name: String,
-    val description: String,
-    val difficulty: String,
-    val tags: List<String>,
-    val rating: Double,
-    val numRatings: Int,
-    val numCheckins: Int,
-    val numPhotos: Int,
-    val numComments: Int,
-    val photos: List<String>,
-)
-
 enum class DifficultyAndRatingSize {
     XS, SM
 }

@@ -1,6 +1,5 @@
 package com.team.hogspot.LoginActivity
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,16 +40,6 @@ class LandingScreenActivity : ComponentActivity() {
                 Navigation()
             }
         }
-    }
-
-    private fun toSignUpForm() {
-        val intent = Intent(this, SignUpActivity::class.java)
-        startActivity(intent)
-    }
-
-    private fun toLogInForm() {
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
     }
 }
 

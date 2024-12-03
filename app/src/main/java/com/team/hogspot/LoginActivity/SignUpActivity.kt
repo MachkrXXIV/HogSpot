@@ -117,28 +117,15 @@ fun SignUpForm(
     onNavigateToLogin: () -> Unit
 ) {
     val context = LocalContext.current
-    var email by remember { mutableStateOf("Email...") }
-    var username by remember { mutableStateOf("Username...") }
-    var password by remember { mutableStateOf("Password...") }
-    var confirmPassword by remember { mutableStateOf("Confirm Password...") }
+    var email by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
     var isActive by remember { mutableStateOf(false) }
 
-    if (email !== "Email..." && username !== "Username..." && password !== "Password..." && confirmPassword !== "Confirm Password...") {
+    if (email.isNotEmpty() && username.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty()) {
         isActive = true
     }
-    if (email.isEmpty()) {
-        email = "Email..."
-    }
-    if (username.isEmpty()) {
-        username = "Username..."
-    }
-    if (password.isEmpty()) {
-        password = "Password..."
-    }
-    if (confirmPassword.isEmpty()) {
-        confirmPassword = "Confirm Password..."
-    }
-
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -158,6 +145,7 @@ fun SignUpForm(
         Spacer(modifier = Modifier.height(32.dp))
         Input(
             value = email,
+            label = "Email",
             onValueChange = { email = it },
             shape = AppTheme.shape.containerRoundedTop,
             iconId = -1,
@@ -165,6 +153,7 @@ fun SignUpForm(
         )
         Input(
             value = username,
+            label = "Username",
             onValueChange = { username = it},
             shape = AppTheme.shape.containerRoundedNone,
             iconId = -1,
@@ -172,6 +161,7 @@ fun SignUpForm(
         )
         Input(
             value = password,
+            label = "Password",
             onValueChange = { password = it},
             shape = AppTheme.shape.containerRoundedNone,
             iconId = -1,
@@ -179,6 +169,7 @@ fun SignUpForm(
         )
         Input(
             value = confirmPassword,
+            label = "Confirm Password",
             onValueChange = {
                 confirmPassword = it
                 Log.d("SignUpActivity", "updated confirmPassword: $confirmPassword")

@@ -374,7 +374,7 @@ fun InfoView(
         modifier = modifier
     ) {
         H2(
-            "HogSpot #123"
+            "Title 1"
         )
         Image(
             painter = painterResource(id = R.drawable.spot_image1),

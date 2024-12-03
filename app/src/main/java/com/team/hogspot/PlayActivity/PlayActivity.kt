@@ -76,10 +76,12 @@ import com.team.hogspot.composables.Header
 import com.team.hogspot.composables.P
 import com.team.hogspot.composables.PrimaryButton
 import com.team.hogspot.composables.SecondaryButton
+import com.team.hogspot.model.user.User
 import com.team.hogspot.ui.theme.AppTheme
 import com.team.hogspot.util.LocationUtilCallback
 import com.team.hogspot.util.createLocationCallback
 import com.team.hogspot.util.createLocationRequest
+import java.time.LocalDateTime
 
 class PlayActivity : ComponentActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -252,6 +254,16 @@ fun PlayPage(currentLocation: LatLng?, navController: NavController? = null) {
         currentView = if (currentView == View.MAP) View.INFO else View.MAP
     }
 
+    val user = User(
+        userId = 1,
+        userName = "Bob",
+        email = "bob@gmail.com",
+        dateJoined = LocalDateTime.now(),
+        streak = 4,
+        numSpots = 2,
+        friends = listOf()
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -262,7 +274,7 @@ fun PlayPage(currentLocation: LatLng?, navController: NavController? = null) {
         }
         Header(
             pageTitle = "Play",
-            username = "Jordi",
+            username = user.userName,
             showBackButton = true,
             showUserProfile = false,
         )

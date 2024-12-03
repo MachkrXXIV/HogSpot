@@ -40,7 +40,9 @@ import com.team.hogspot.composables.Hogspot
 import com.team.hogspot.composables.Input
 import com.team.hogspot.composables.Navbar
 import com.team.hogspot.composables.SearchItem
+import com.team.hogspot.model.user.User
 import com.team.hogspot.ui.theme.AppTheme
+import java.time.LocalDateTime
 
 class SearchActivity : ComponentActivity() {
     override fun onCreate(savedInstancesBundle: Bundle?) {
@@ -133,6 +135,15 @@ fun SearchPage(
             difficulty = Difficulty.HARD
         )
     )
+    val user = User(
+        userId = 1,
+        userName = "Bob",
+        email = "bob@gmail.com",
+        dateJoined = LocalDateTime.now(),
+        streak = 4,
+        numSpots = 2,
+        friends = listOf()
+    )
 
     Box(
         modifier = Modifier
@@ -146,7 +157,7 @@ fun SearchPage(
             ) {
             Header(
                 pageTitle = "Search",
-                username = "Jordi",
+                username = user.userName,
                 onUserClick = onUserClick
             )
             Spacer(modifier = Modifier.height(16.dp))

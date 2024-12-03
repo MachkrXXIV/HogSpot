@@ -1,6 +1,7 @@
 package com.team.hogspot.composables
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.widget.Space
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -155,24 +158,8 @@ fun UserInfoCard(
 @Composable
 fun UserLeaderboardCard(
     position: Int,
-    user: UserTemp
+    user: User
 ) {
-//        Column {
-//            H2(
-//                text = position.toString(),
-//                color = AppTheme.colorScheme.textPrimary
-//            )
-//            H3(
-//                text = user.username,
-//                color = AppTheme.colorScheme.textPrimary
-//            )
-//            P(
-//                text = user.numSpots.toString(),
-//                color = AppTheme.colorScheme.textSecondary
-//            )
-//        }
-//    }
-
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -187,18 +174,18 @@ fun UserLeaderboardCard(
             Spacer(modifier = Modifier.width(50.dp))
             // Profile Icon
             ProfileImage(
-                username = user.username,
+                username = user.userName,
                 onClick = {},
                 size = ImageSize.SM
             )
             Spacer(modifier = Modifier.width(16.dp))
             H2(
-                text = user.username,
+                text = user.userName,
                 color = AppTheme.colorScheme.textPrimary
             )
-            Spacer(modifier = Modifier.width(90.dp))
+            Spacer(modifier = Modifier.weight(1f))
             H3(
-                text = user.numSpots.toString(),
+                text = user.numSpots.toString() + "xp",
                 color = AppTheme.colorScheme.textSecondary
             )
         }
@@ -208,21 +195,73 @@ fun UserLeaderboardCard(
 fun LeaderBoard(
     users: List<User>
 ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(180.dp)
-                .clip(AppTheme.shape.container)
-                .background(AppTheme.colorScheme.backgroundSecondary)
-        ) {
-
-
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(400.dp)
+            .clip(AppTheme.shape.container)
+            .background(AppTheme.colorScheme.backgroundSecondary)
+    ) {
+        items(users) { user ->
+            UserLeaderboardCard(
+                position = users.indexOf(user) + 1,
+                user = user
+            )
         }
+    }
 }
 
 @Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 private fun UserCompsPreview() {
+    val users = listOf(
+        User(
+            userId = 1,
+            userName = "Jordi Castro",
+            email = "jordi@gmail.com",
+            dateJoined = LocalDateTime.now(),
+            streak = 5,
+            numSpots = 3,
+            friends = listOf()
+        ),
+        User(
+            userId = 2,
+            userName = "Jordi Castro",
+            email = "jordi@gmail.com",
+            dateJoined = LocalDateTime.now(),
+            streak = 5,
+            numSpots = 3,
+            friends = listOf()
+        ),
+        User(
+            userId = 3,
+            userName = "Jordi Castro",
+            email = "jordi@gmail.com",
+            dateJoined = LocalDateTime.now(),
+            streak = 5,
+            numSpots = 3,
+            friends = listOf()
+        ),
+        User(
+            userId = 4,
+            userName = "Jordi Castro",
+            email = "jordi@gmail.com",
+            dateJoined = LocalDateTime.now(),
+            streak = 5,
+            numSpots = 3,
+            friends = listOf()
+        ),
+        User(
+            userId = 5,
+            userName = "Jordi Castro",
+            email = "jordi@gmail.com",
+            dateJoined = LocalDateTime.now(),
+            streak = 5,
+            numSpots = 3,
+            friends = listOf()
+        )
+
+    )
     val user = User(
         userId = 1,
         userName = "Jordi Castro",
@@ -255,6 +294,7 @@ private fun UserCompsPreview() {
                 1,
                 user = user
             )
+            LeaderBoard(users = users)
         }
     }
 

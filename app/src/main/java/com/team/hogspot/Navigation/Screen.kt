@@ -5,12 +5,11 @@ sealed class Screen(val route: String) {
     object LandingScreen : Screen("landing_screen")
     object LoginScreen : Screen("login_screen")
     object SignupScreen : Screen("signup_screen")
-    object ExploreScreen : Screen("explore_sceen")
+    object ExploreScreen : Screen("explore_screen")
     object SearchScreen : Screen("search_screen")
     object UserScreen : Screen("user_screen")
     object DetailedSpotScreen : Screen("detailed_spot_screen")
     object NewSpotScreen : Screen("add_spot_screen")
-
     object PlayScreen : Screen("play_screen")
     object PlayDetailScreen : Screen("play_detail_screen")
 

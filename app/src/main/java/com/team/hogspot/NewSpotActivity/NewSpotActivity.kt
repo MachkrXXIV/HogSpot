@@ -36,8 +36,9 @@ import com.team.hogspot.composables.P
 import com.team.hogspot.composables.PrimaryButton
 import com.team.hogspot.composables.SecondaryButton
 import com.team.hogspot.composables.SelectDifficulty
+import com.team.hogspot.model.user.User
 import com.team.hogspot.ui.theme.AppTheme
-
+import java.time.LocalDateTime
 
 
 class NewSpotActivity : ComponentActivity() {
@@ -101,6 +102,15 @@ fun NewSpotPage(
     var description by remember { mutableStateOf("Description...") }
     var location by remember { mutableStateOf("location...") }
 
+    val user = User(
+        userId = 1,
+        userName = "Bob",
+        email = "bob@gmail.com",
+        dateJoined = LocalDateTime.now(),
+        streak = 4,
+        numSpots = 2,
+        friends = listOf()
+    )
 
     Box(
         modifier = Modifier
@@ -115,7 +125,7 @@ fun NewSpotPage(
 
             Header(
                 pageTitle = "Upload",
-                username = "Jordi",
+                username = user.userName,
                 showBackButton = true,
                 showUserProfile = false,
                 onBackClick = onBackClick,
